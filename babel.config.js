@@ -8,8 +8,15 @@ module.exports = function (api) {
         {
           alias: {
             components: "./src/components",
+            screens: "./src/screens",
             assets: "./assets",
           },
+        },
+      ],
+      [
+        "react-native-reanimated/plugin",
+        {
+          relativeSourceLocation: true,
         },
       ],
     ],

@@ -1,10 +1,7 @@
-import { StatusBar } from "expo-status-bar";
-import { View } from "react-native";
+import { View, ViewProps } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 
-import AppBar from "components/app-bar";
-
-const Layout = () => {
+const Background = ({ children }: ViewProps) => {
   return (
     <View
       style={{
@@ -13,7 +10,7 @@ const Layout = () => {
       }}
     >
       <LinearGradient
-        colors={["#1D3557", "#005F83", "#008B9A"]}
+        colors={["#E3F0FF", "#99C2FF"]}
         style={{
           position: "absolute",
           left: 0,
@@ -23,10 +20,9 @@ const Layout = () => {
           width: "100%",
         }}
       />
-      <AppBar />
-      <StatusBar style="auto" />
+      <>{children}</>
     </View>
   );
 };
 
-export default Layout;
+export default Background;

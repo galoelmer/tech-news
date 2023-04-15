@@ -1,11 +1,14 @@
 import { Provider as PaperProvider } from "react-native-paper";
 
-import Layout from "components/layout";
+import Navigation from "./navigation";
+import BackgroundContainer from "components/background";
 
 export default function App() {
   return (
     <PaperProvider>
-      <Layout />
+      <BackgroundContainer>
+        <Navigation />
+      </BackgroundContainer>
     </PaperProvider>
   );
 }
