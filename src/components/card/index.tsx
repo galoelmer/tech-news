@@ -1,61 +1,83 @@
 import { Image, View } from "react-native";
-import { Avatar, Card, Text, IconButton } from "react-native-paper";
+import { Badge, Card, Text } from "react-native-paper";
 
-import ShareButton from "./share-button";
 import { CardProps } from "./types";
 
-const LeftContentIcon = (imageSource: string) => {
-  const MediaSourceLogo = () => (
-    <Image style={{ width: 45, height: 45 }} source={{ uri: imageSource }} />
-  );
-  return (
-    <Avatar.Image
-      size={45}
-      style={{ overflow: "hidden", borderRadius: 0 }}
-      source={MediaSourceLogo}
-    />
-  );
-};
+//TODO:  Move func to Utils directory
+function formatDate(dateStr: string): string {
+  const date = new Date(dateStr);
+  const daysOfWeek = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  const monthsOfYear = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
-const CardComponent = ({
-  title,
-  publishedAt,
-  description,
-  urlToImage,
-  imageSource,
-  sourceName,
-  url,
-}: CardProps) => {
-  const Icon = () => LeftContentIcon(imageSource);
+  const dayOfWeek = daysOfWeek[date.getDay()];
+  const dayOfMonth = date.getDate().toString().padStart(2, "0");
+  const month = monthsOfYear[date.getMonth()];
+  const year = date.getFullYear();
 
+  return `${dayOfWeek}, ${dayOfMonth} ${month} ${year}`;
+}
+
+// TODO: refactor component
+const CardComponent = ({ title, publishedDate, image_url }: CardProps) => {
   return (
-    <Card style={{ margin: 10 }}>
-      <Card.Title title={title} subtitle={publishedAt} left={Icon} />
-      <Card.Content>
-        <Text variant="bodyMedium">{description}</Text>
-      </Card.Content>
-      <Card.Cover source={{ uri: urlToImage }} style={{ margin: 5 }} />
-      <Card.Actions>
-        <View
-          style={{
-            flexGrow: 1,
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-          }}
-        >
-          <ShareButton />
-          <IconButton
-            icon="heart-outline"
-            mode="contained"
-            animated
-            size={25}
-            onPress={() => console.log("Pressed Like button")}
-            accessibilityLabel="Like"
-            style={{ display: "flex" }}
+    <Card
+      style={{
+        margin: 10,
+        overflow: "hidden",
+        height: 120,
+        backgroundColor: "#f9f9f9",
+      }}
+      mode="contained"
+    >
+      <View style={{ flexDirection: "row" }}>
+        <View style={{ flex: 1, marginRight: 40, marginLeft: 5 }}>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <Badge
+              size={5}
+              style={{
+                backgroundColor: "#949bad",
+                marginRight: 5,
+                alignSelf: "center",
+              }}
+            />
+            <Text variant="labelSmall" style={{ color: "#949bad" }}>
+              {formatDate(publishedDate)}
+            </Text>
+          </View>
+          <Text
+            style={{
+              marginTop: 8,
+            }}
+            variant="titleMedium"
+          >
+            {title}
+          </Text>
+        </View>
+        <View>
+          <Image
+            source={{ uri: image_url }}
+            style={{ width: 130, height: 120, borderRadius: 5 }}
           />
         </View>
-      </Card.Actions>
+      </View>
     </Card>
   );
 };

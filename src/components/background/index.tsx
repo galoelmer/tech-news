@@ -10,7 +10,7 @@ const Background = ({ children }: ViewProps) => {
       }}
     >
       <LinearGradient
-        colors={["#E3F0FF", "#99C2FF"]}
+        colors={["#fff", "#FAF7FF"]}
         style={{
           position: "absolute",
           left: 0,

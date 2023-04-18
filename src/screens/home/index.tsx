@@ -19,12 +19,8 @@ const Home = () => {
           <Card
             key={item.id}
             title={item.title}
-            description={item.description}
-            publishedAt={item.publishedAt}
-            url={item.url}
-            urlToImage={item.urlToImage}
-            imageSource={item.imageSource}
-            sourceName={item.sourceName}
+            publishedDate={item.pubDate}
+            image_url={item.image_url}
           />
         )}
       />
