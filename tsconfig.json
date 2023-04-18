@@ -10,7 +10,8 @@
       "hooks/*": ["src/hooks/*"],
       "assets/*": ["assets/*"],
       "context/*": ["src/context/*"],
-      "services/*": ["src/services/*"]
+      "services/*": ["src/services/*"],
+      "utils/*": ["src/utils/*"]
     }
   }
 }
