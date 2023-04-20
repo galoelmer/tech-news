@@ -1,8 +1,5 @@
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
-import {
-  createDrawerNavigator,
-  DrawerToggleButton,
-} from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
 import Logo from "components/logo";
@@ -10,58 +7,63 @@ import Register from "screens/register";
 import Login from "screens/login";
 import Home from "screens/home";
 
-const Drawer = createDrawerNavigator();
+const Tab = createBottomTabNavigator();
 
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <Drawer.Navigator
+      <Tab.Navigator
         initialRouteName="Home"
         screenOptions={{
           headerTitle: () => <Logo />,
-          headerRight: () => <DrawerToggleButton tintColor="#fff" />,
-          headerLeft: () => null,
           headerStyle: {
             backgroundColor: "#5f8dda",
           },
-          drawerLabelStyle: {
-            fontSize: 18,
-            fontWeight: "bold",
+          tabBarLabelStyle: {
+            fontSize: 12,
+            letterSpacing: 1,
+            textTransform: "uppercase",
           },
-          drawerPosition: "right",
-          sceneContainerStyle: {
-            backgroundColor: "transparent",
+          tabBarStyle: {
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 5,
+            },
+            shadowOpacity: 0.05,
+            shadowRadius: 15,
           },
         }}
       >
-        <Drawer.Screen
-          name="News"
+        <Tab.Screen
+          name="Home"
           component={Home}
           options={{
-            drawerIcon: () => (
-              <Ionicons name="newspaper-outline" size={30} color="#5f8dda" />
+            tabBarLabel: "News",
+            tabBarIcon: ({ focused, color }) => (
+              <Ionicons
+                name={focused ? "newspaper" : "newspaper-outline"}
+                size={30}
+                color={focused ? "#5f8dda" : color}
+              />
             ),
           }}
         />
-        <Drawer.Screen
+        <Tab.Screen
           name="Login"
           component={Login}
           options={{
-            drawerIcon: () => (
-              <Ionicons name="log-in-outline" size={30} color="#5f8dda" />
+            tabBarLabel: "Login",
+            tabBarIcon: ({ focused, color }) => (
+              <Ionicons
+                name={focused ? "log-in" : "log-in-outline"}
+                size={30}
+                color={focused ? "#5f8dda" : color}
+              />
             ),
           }}
         />
-        <Drawer.Screen
-          name="Register"
-          component={Register}
-          options={{
-            drawerIcon: () => (
-              <Ionicons name="person-add-outline" size={30} color="#5f8dda" />
-            ),
-          }}
-        />
-      </Drawer.Navigator>
+      </Tab.Navigator>
     </NavigationContainer>
   );
 }
