@@ -29,7 +29,7 @@ const Home = () => {
 
   return (
     <SafeAreaView>
-      <ScrollView>
+      <ScrollView bounces={false} showsVerticalScrollIndicator={false}>
         <ImageSlider data={data} />
         <Text variant="headlineSmall" style={{ marginLeft: 15 }}>
           Tech News

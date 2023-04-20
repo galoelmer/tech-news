@@ -1,13 +1,24 @@
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { NavigationContainer } from "@react-navigation/native";
+import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import Ionicons from "@expo/vector-icons/Ionicons";
 
-import Logo from "components/logo";
-import Register from "screens/register";
-import Login from "screens/login";
 import Home from "screens/home";
+import Login from "screens/login";
+import Register from "screens/register";
+import Logo from "components/logo";
 
 const Tab = createBottomTabNavigator();
+const TopTab = createMaterialTopTabNavigator();
+
+const LoginStack = () => {
+  return (
+    <TopTab.Navigator>
+      <Tab.Screen name="Login" component={Login} />
+      <Tab.Screen name="Register" component={Register} />
+    </TopTab.Navigator>
+  );
+};
 
 export default function Navigation() {
   return (
@@ -50,8 +61,8 @@ export default function Navigation() {
           }}
         />
         <Tab.Screen
-          name="Login"
-          component={Login}
+          name="LoginStack"
+          component={LoginStack}
           options={{
             tabBarLabel: "Login",
             tabBarIcon: ({ focused, color }) => (
