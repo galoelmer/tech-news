@@ -1,25 +1,30 @@
-import { Image, View, StyleSheet } from "react-native";
+import { Image, View, StyleSheet, Pressable } from "react-native";
 import { Badge, Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
 
 import { CardProps } from "./types";
 import formatDate from "utils/formatDate";
 
-const CardComponent = ({ title, publishedDate, image_url }: CardProps) => {
+const CardComponent = ({ id, title, publishedDate, image_url }: CardProps) => {
+  const { navigate } = useNavigation();
+
   return (
-    <View style={style.container}>
-      <View style={style.content}>
-        <View style={style.postDateContainer}>
-          <Badge size={5} style={style.badge} />
-          <Text variant="labelSmall" style={style.postDate}>
-            {formatDate(publishedDate)}
+    <Pressable onPress={() => navigate("NewsDetails", { id })}>
+      <View style={style.container}>
+        <View style={style.content}>
+          <View style={style.postDateContainer}>
+            <Badge size={5} style={style.badge} />
+            <Text variant="labelSmall" style={style.postDate}>
+              {formatDate(publishedDate)}
+            </Text>
+          </View>
+          <Text style={style.title} variant="titleMedium">
+            {title}
           </Text>
         </View>
-        <Text style={style.title} variant="titleMedium">
-          {title}
-        </Text>
+        <Image source={{ uri: image_url }} style={style.image} />
       </View>
-      <Image source={{ uri: image_url }} style={style.image} />
-    </View>
+    </Pressable>
   );
 };
 

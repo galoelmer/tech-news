@@ -1,6 +1,8 @@
-import { useState } from "react";
-import { Dimensions, StyleSheet, View, Image, Pressable } from "react-native";
+import { useState, useMemo } from "react";
+import { View, Image, Pressable, Dimensions } from "react-native";
 import { Text } from "react-native-paper";
+import { useNavigation } from "@react-navigation/native";
+import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Swiper from "react-native-web-swiper";
 
 import styles from "./styles";
@@ -11,31 +13,45 @@ interface ImageSliderProps {
 }
 
 const ImageSlider = ({ data }: ImageSliderProps) => {
-  const [text, setText] = useState(data[0].title);
+  const [article, setArticle] = useState(data[0]);
+  const { navigate } = useNavigation();
+
+  // TODO: fix type error
+  const handlePress = () => navigate("NewsDetails", { id: article.id });
+
+  const tapGesture = useMemo(
+    () =>
+      Gesture.Tap()
+        .maxDuration(250)
+        .onStart(() => handlePress())
+        .runOnJS(true),
+    [handlePress]
+  );
 
   return (
     <>
-      <View style={styles.container}>
-        <Swiper
-          loop
-          from={0}
-          timeout={4.5}
-          onIndexChanged={(index) => setText(data[index].title)}
-          controlsProps={controlsProps}
-        >
-          {data.slice(0, 4).map((item) => (
-            <View key={item.id}>
-              <Image source={{ uri: item.image_url }} style={styles.image} />
-            </View>
-          ))}
-        </Swiper>
-      </View>
-      {/* TODO: add link to url of article */}
-      <Pressable onPress={() => console.log("pressed Link")}>
+      <GestureDetector gesture={tapGesture}>
+        <View style={styles.container}>
+          <Swiper
+            loop
+            from={0}
+            timeout={4.5}
+            onIndexChanged={(index) => setArticle(data[index])}
+            controlsProps={controlsProps}
+          >
+            {data.slice(0, 4).map((item) => (
+              <View key={item.id}>
+                <Image source={{ uri: item.image_url }} style={styles.image} />
+              </View>
+            ))}
+          </Swiper>
+        </View>
+      </GestureDetector>
+      <Pressable onPress={handlePress}>
         <View style={styles.shadow}>
           <View style={styles.titleWrapper}>
             <Text style={styles.text} variant="titleMedium">
-              {text}
+              {article.title}
             </Text>
           </View>
         </View>

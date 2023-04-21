@@ -86,7 +86,7 @@ export default {
       title: "The new MacBook Air 15-inch launch looks imminent — here’s why",
       link: "https://www.tomsguide.com/news/the-new-macbook-air-15-inch-launch-looks-imminent-heres-why",
       keywords: null,
-      creator: null,
+      creator: ["Alyse Stanley"],
       description:
         "So much for rumors that a larger MacBook Air could pack an upgraded chip.",
       content:
