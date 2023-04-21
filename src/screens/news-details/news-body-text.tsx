@@ -1,4 +1,4 @@
-import { Text } from "react-native";
+import { View, Text } from "react-native";
 import styles from "./styles";
 
 function selectEveryTwoSentences(text: string) {
@@ -24,13 +24,13 @@ const NewsBodyText = ({ text }: { text: string }) => {
   const selectedSentences = selectEveryTwoSentences(text);
 
   return (
-    <>
+    <View style={{ marginBottom: 100 }}>
       {selectedSentences.map((sentence, index) => (
         <Text key={index} style={styles.body}>
           {sentence}
         </Text>
       ))}
-    </>
+    </View>
   );
 };
 

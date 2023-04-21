@@ -35,7 +35,7 @@ export default StyleSheet.create({
   body: {
     fontSize: 15,
     lineHeight: 28,
-    letterSpacing: 0.35,
+    letterSpacing: 0.3,
     marginBottom: 14,
   },
 });
