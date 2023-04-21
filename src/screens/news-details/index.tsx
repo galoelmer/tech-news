@@ -1,5 +1,4 @@
 import {
-  StyleSheet,
   View,
   SafeAreaView,
   ScrollView,
@@ -10,17 +9,14 @@ import { Text, Appbar, Badge } from "react-native-paper";
 
 import { useGetNewsDataQuery } from "services/api";
 import formatDate from "utils/formatDate";
+import styles from "./styles";
 
-import { NewsDetailsProps } from "@/src/navigation/types";
+import NewBodyText from "./news-body-text";
+import { NewsDetailsProps } from "navigation/types";
 
 interface PostCreatorsProps {
   creators: string[] | null | undefined;
 }
-
-// TODO: improve this function
-const addDoubleLineBreakToText = (text: string) => {
-  return text.replace(/(?!\.) \. /g, ".\n\n");
-};
 
 const PostCreators = ({ creators }: PostCreatorsProps) => {
   if (!creators || creators.length === 0) {
@@ -76,9 +72,7 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
             <PostCreators creators={news?.creator} />
           </View>
           <Image source={{ uri: news?.image_url }} style={styles.image} />
-          <Text variant="bodyMedium" style={styles.body}>
-            {addDoubleLineBreakToText(news?.content ?? "")}
-          </Text>
+          <NewBodyText text={news?.content ?? ""} />
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -86,38 +80,3 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
 };
 
 export default NewsDetails;
-
-const styles = StyleSheet.create({
-  appBar: {
-    backgroundColor: "transparent",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
-  appBarBackButton: {
-    marginLeft: 0,
-  },
-  title: {
-    fontWeight: "600",
-  },
-  postDateWrapper: { flexDirection: "row", marginTop: 10 },
-  postDate: {
-    fontSize: 12,
-    color: "#949bad",
-  },
-  creator: {
-    fontSize: 12,
-  },
-  badge: {
-    backgroundColor: "#949bad",
-    marginHorizontal: 8,
-    alignSelf: "center",
-    borderRadius: 3,
-  },
-  image: {
-    flex: 1,
-    height: 200,
-    borderRadius: 5,
-    marginVertical: 15,
-  },
-  body: { lineHeight: 25 },
-});

@@ -44,6 +44,7 @@ const Home = () => {
           }
         }}
       >
+        {/* TODO: Image slider not working on web */}
         <ImageSlider data={data} />
         <Text variant="headlineSmall" style={{ marginLeft: 15 }}>
           Tech News

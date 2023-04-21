@@ -11,7 +11,8 @@
       "assets/*": ["assets/*"],
       "context/*": ["src/context/*"],
       "services/*": ["src/services/*"],
-      "utils/*": ["src/utils/*"]
+      "utils/*": ["src/utils/*"],
+      "navigation/*": ["src/navigation/*"]
     }
   }
 }
