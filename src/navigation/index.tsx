@@ -90,7 +90,35 @@ export default function Navigation() {
         }}
       >
         <Stack.Screen name="TabNavigator" component={TabNavigator} />
-        <Stack.Screen name="NewsDetails" component={NewsDetails} />
+        <Stack.Screen
+          name="NewsDetails"
+          component={NewsDetails}
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: "",
+            presentation: "modal",
+            headerShadowVisible: true,
+            headerStyle: {
+              backgroundColor: "#285baf",
+            },
+            headerLeft: () => (
+              <Ionicons
+                onPress={navigation.goBack}
+                name="arrow-back"
+                size={30}
+                color="#eef3fb"
+              />
+            ),
+            headerRight: () => (
+              <Ionicons
+                onPress={() => {}}
+                name="bookmark-outline"
+                size={30}
+                color="#eef3fb"
+              />
+            ),
+          })}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

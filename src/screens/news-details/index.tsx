@@ -1,17 +1,13 @@
-import {
-  View,
-  SafeAreaView,
-  ScrollView,
-  ActivityIndicator,
-  Image,
-} from "react-native";
-import { Text, Appbar, Badge } from "react-native-paper";
+import { View, SafeAreaView, ActivityIndicator, Image } from "react-native";
+import { Text, Badge } from "react-native-paper";
 
 import { useGetNewsDataQuery } from "services/api";
 import formatDate from "utils/formatDate";
-import styles from "./styles";
 
+import ScrollViewWithButton from "components/scrollview-with-button";
 import NewBodyText from "./news-body-text";
+
+import styles from "./styles";
 import { NewsDetailsProps } from "navigation/types";
 
 interface PostCreatorsProps {
@@ -33,7 +29,7 @@ const PostCreators = ({ creators }: PostCreatorsProps) => {
   );
 };
 
-const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
+const NewsDetails = ({ route }: NewsDetailsProps) => {
   const { id } = route.params;
   const { data, isLoading } = useGetNewsDataQuery();
 
@@ -49,19 +45,8 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
 
   return (
     <SafeAreaView>
-      <ScrollView
-        style={{ marginHorizontal: 15 }}
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-      >
-        <Appbar style={styles.appBar}>
-          <Appbar.BackAction
-            onPress={navigation.goBack}
-            style={styles.appBarBackButton}
-          />
-          <Appbar.Action icon="bookmark-outline" size={28} onPress={() => {}} />
-        </Appbar>
-        <View>
+      <ScrollViewWithButton scrollviewStyles={{ marginHorizontal: 15 }}>
+        <View style={{ marginTop: 10 }}>
           <Text style={styles.title} variant="titleLarge">
             {news?.title}
           </Text>
@@ -74,7 +59,7 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
           <Image source={{ uri: news?.image_url }} style={styles.image} />
           <NewBodyText text={news?.content ?? ""} />
         </View>
-      </ScrollView>
+      </ScrollViewWithButton>
     </SafeAreaView>
   );
 };
