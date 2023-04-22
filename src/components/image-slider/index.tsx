@@ -1,12 +1,14 @@
-import { useState, useMemo } from "react";
-import { View, Image, Pressable, Dimensions } from "react-native";
+import { useState } from "react";
+import { View, Image, Pressable } from "react-native";
 import { Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import Swiper from "react-native-web-swiper";
+import Swiper, { SwiperControlsProps } from "react-native-web-swiper";
 
 import TapGestureDetector from "./tap-gesture-detector";
+import { ArrowLeftButton, ArrowRightButton } from "./chevron-icon-button";
 
 import styles from "./styles";
+import { isWeb } from "utils/checkPlatform";
 import { Article } from "context/types";
 
 interface ImageSliderProps {
@@ -18,7 +20,8 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
   const { navigate } = useNavigation();
 
   // TODO: fix type error
-  const handlePress = () => navigate("NewsDetails", { id: article.id });
+  const handlePress = (id?: string | undefined) =>
+    navigate("NewsDetails", { id: id ?? article.id });
 
   return (
     <>
@@ -30,16 +33,21 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
             timeout={4.5}
             onIndexChanged={(index) => setArticle(data[index])}
             controlsProps={controlsProps}
+            gesturesEnabled={() => !isWeb}
           >
             {data.slice(0, 4).map((item) => (
-              <View key={item.id}>
+              <Pressable
+                key={item.id}
+                disabled={!isWeb}
+                onPress={() => handlePress(item.id)}
+              >
                 <Image source={{ uri: item.image_url }} style={styles.image} />
-              </View>
+              </Pressable>
             ))}
           </Swiper>
         </View>
       </TapGestureDetector>
-      <Pressable onPress={handlePress}>
+      <Pressable onPress={() => handlePress()}>
         <View style={styles.shadow}>
           <View style={styles.titleWrapper}>
             <Text style={styles.text} variant="titleMedium">
@@ -52,9 +60,11 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
   );
 };
 
-const controlsProps = {
-  prevPos: false,
-  nextPos: false,
+const controlsProps: SwiperControlsProps = {
+  prevPos: isWeb && "left",
+  nextPos: isWeb && "right",
+  PrevComponent: ArrowLeftButton,
+  NextComponent: ArrowRightButton,
   dotsWrapperStyle: {
     marginBottom: 60,
   },

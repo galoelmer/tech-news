@@ -1,5 +1,6 @@
 import { Dimensions, StyleSheet } from "react-native";
 
+import { isWeb } from "utils/checkPlatform";
 const { width } = Dimensions.get("window");
 
 export default StyleSheet.create({
@@ -9,7 +10,7 @@ export default StyleSheet.create({
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "white",
-    width: width - 40,
+    width: isWeb ? "90%" : width - 40,
     alignSelf: "center",
   },
   image: {
@@ -25,16 +26,28 @@ export default StyleSheet.create({
     padding: 10,
     textAlign: "center",
     textTransform: "capitalize",
+    ...(isWeb && {
+      fontFamily: "Roboto",
+      fontSize: 16,
+      letterSpacing: 0.4,
+      color: "#000",
+    }),
   },
   titleWrapper: {
-    width: width - 100,
     backgroundColor: "#fff",
-    overflow: "hidden",
     height: 90,
-    borderRadius: 8,
     justifyContent: "center",
+    alignSelf: "center",
+    ...(!isWeb && {
+      width: width - 100,
+    }),
   },
   shadow: {
+    ...(isWeb && {
+      width: "80%",
+    }),
+    overflow: "hidden",
+    borderRadius: 8,
     alignSelf: "center",
     shadowColor: "#000",
     shadowOffset: {

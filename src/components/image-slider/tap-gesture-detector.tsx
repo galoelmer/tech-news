@@ -7,7 +7,7 @@ interface TapGestureDetectorProps
   extends PropsWithChildren<{ onPress: () => void }> {}
 
 const TapGestureDetector = ({ children, onPress }: TapGestureDetectorProps) => {
-  if (isWeb()) {
+  if (isWeb) {
     return <>{children}</>;
   }
 
