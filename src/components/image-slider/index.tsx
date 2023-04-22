@@ -2,8 +2,9 @@ import { useState, useMemo } from "react";
 import { View, Image, Pressable, Dimensions } from "react-native";
 import { Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import Swiper from "react-native-web-swiper";
+
+import TapGestureDetector from "./tap-gesture-detector";
 
 import styles from "./styles";
 import { Article } from "context/types";
@@ -19,18 +20,9 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
   // TODO: fix type error
   const handlePress = () => navigate("NewsDetails", { id: article.id });
 
-  const tapGesture = useMemo(
-    () =>
-      Gesture.Tap()
-        .maxDuration(250)
-        .onStart(() => handlePress())
-        .runOnJS(true),
-    [handlePress]
-  );
-
   return (
     <>
-      <GestureDetector gesture={tapGesture}>
+      <TapGestureDetector onPress={handlePress}>
         <View style={styles.container}>
           <Swiper
             loop
@@ -46,7 +38,7 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
             ))}
           </Swiper>
         </View>
-      </GestureDetector>
+      </TapGestureDetector>
       <Pressable onPress={handlePress}>
         <View style={styles.shadow}>
           <View style={styles.titleWrapper}>
