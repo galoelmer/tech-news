@@ -1,52 +1,59 @@
-import { Dimensions, StyleSheet } from "react-native";
+import StyleSheet from "react-native-media-query";
+import { Dimensions } from "react-native";
 
-import { isWeb } from "utils/checkPlatform";
 const { width } = Dimensions.get("window");
+import { isNative } from "utils/checkPlatform";
+import { tablet } from "utils/mediaQueries";
+import { webStyle } from "utils/webStyles";
 
-export default StyleSheet.create({
+const { styles, ids } = StyleSheet.create({
   container: {
     marginVertical: 15,
     height: 200,
     borderRadius: 8,
     overflow: "hidden",
     backgroundColor: "white",
-    width: isWeb ? "90%" : width - 40,
+    width: webStyle("90%") ?? width - 40,
     alignSelf: "center",
-    ...(isWeb && { cursor: "pointer" }),
+    [tablet]: {
+      height: 280,
+      width: "80%",
+    },
+    cursor: webStyle("pointer"),
   },
   image: {
     height: 200,
+    [tablet]: {
+      height: 280,
+    },
   },
   pagination: {
     marginBottom: 50,
   },
   text: {
+    fontFamily: "Roboto",
     fontWeight: "600",
     lineHeight: 22,
-    letterSpacing: 0.25,
+    letterSpacing: webStyle(0.4) ?? 0.25,
     padding: 10,
     textAlign: "center",
     textTransform: "capitalize",
-    ...(isWeb && {
-      fontFamily: "Roboto",
-      fontSize: 16,
-      letterSpacing: 0.4,
-      color: "#000",
-    }),
+    fontSize: webStyle(16),
+    color: webStyle("#000"),
   },
   titleWrapper: {
     backgroundColor: "#fff",
     height: 90,
     justifyContent: "center",
     alignSelf: "center",
-    ...(!isWeb && {
-      width: width - 100,
-    }),
+    ...(isNative && { width: width - 100 }),
   },
   shadow: {
-    ...(isWeb && {
-      width: "80%",
-    }),
+    width: webStyle("80%"),
+    [tablet]: {
+      width: "70%",
+    },
+    backgroundColor: "#fff",
     overflow: "hidden",
     borderRadius: 8,
     alignSelf: "center",
@@ -73,3 +80,5 @@ export default StyleSheet.create({
     marginRight: 5,
   },
 });
+
+export { styles as default, ids };

@@ -7,7 +7,7 @@ import Swiper, { SwiperControlsProps } from "react-native-web-swiper";
 import TapGestureDetector from "./tap-gesture-detector";
 import { ArrowLeftButton, ArrowRightButton } from "./chevron-icon-button";
 
-import styles from "./styles";
+import styles, { ids } from "./styles";
 import { isWeb } from "utils/checkPlatform";
 import { Article } from "context/types";
 
@@ -26,7 +26,7 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
   return (
     <>
       <TapGestureDetector onPress={handlePress}>
-        <View style={styles.container}>
+        <View style={styles.container} dataSet={{ media: ids.container }}>
           <Swiper
             loop
             from={0}
@@ -41,14 +41,18 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
                 disabled={!isWeb}
                 onPress={() => handlePress(item.id)}
               >
-                <Image source={{ uri: item.image_url }} style={styles.image} />
+                <Image
+                  source={{ uri: item.image_url }}
+                  style={styles.image}
+                  dataSet={{ media: ids.image }}
+                />
               </Pressable>
             ))}
           </Swiper>
         </View>
       </TapGestureDetector>
       <Pressable onPress={() => handlePress()}>
-        <View style={styles.shadow}>
+        <View style={styles.shadow} dataSet={{ media: ids.shadow }}>
           <View style={styles.titleWrapper}>
             <Text style={styles.text} variant="titleMedium">
               {article.title}
