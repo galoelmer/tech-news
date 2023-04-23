@@ -109,6 +109,12 @@ export default function Navigation() {
                 name="arrow-back"
                 size={30}
                 color="#eef3fb"
+                style={{
+                  ...(isWeb && {
+                    marginLeft: 12,
+                    cursor: "pointer",
+                  }),
+                }}
               />
             ),
             headerRight: () => (
@@ -117,6 +123,12 @@ export default function Navigation() {
                 name="bookmark-outline"
                 size={30}
                 color="#eef3fb"
+                style={{
+                  ...(isWeb && {
+                    marginRight: 12,
+                    cursor: "pointer",
+                  }),
+                }}
               />
             ),
           })}

@@ -1,9 +1,10 @@
-import { View, SafeAreaView, ActivityIndicator, Image } from "react-native";
+import { View, ActivityIndicator, Image } from "react-native";
 import { Text, Badge } from "react-native-paper";
 
 import { useGetNewsDataQuery } from "services/api";
 import formatDate from "utils/formatDate";
 
+import SafeAreaView from "components/safe-area-view";
 import ScrollViewWithButton from "components/scrollview-with-button";
 import NewBodyText from "./news-body-text";
 
