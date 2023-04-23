@@ -10,6 +10,7 @@ const Logo = () => {
         width: 180,
         height: 30,
       }}
+      resizeMode="stretch"
     />
   );
 };

@@ -2,7 +2,12 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import {
+  createDrawerNavigator,
+  DrawerToggleButton,
+} from "@react-navigation/drawer";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import { useMediaQuery } from "react-responsive";
 
 import Home from "screens/home";
 import Login from "screens/login";
@@ -16,6 +21,7 @@ import { RootStackParamList } from "./types";
 const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
+const Drawer = createDrawerNavigator();
 
 const LoginStack = () => {
   return (
@@ -82,7 +88,30 @@ const TabNavigator = () => (
   </Tab.Navigator>
 );
 
+const DrawerNavigator = () => {
+  return (
+    <Drawer.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerTitle: () => <Logo />,
+        headerTitleAlign: "center",
+        headerStyle: {
+          backgroundColor: "#5f8dda",
+        },
+        headerLeft: () => null,
+        headerRight: () => <DrawerToggleButton tintColor="#fff" />,
+        drawerPosition: "right",
+      }}
+    >
+      <Drawer.Screen name="Home" component={Home} />
+      <Drawer.Screen name="LoginStack" component={LoginStack} />
+    </Drawer.Navigator>
+  );
+};
+
 export default function Navigation() {
+  const isTablet = useMediaQuery({ query: "(min-width: 500px)" });
+
   return (
     <NavigationContainer>
       <Stack.Navigator
@@ -91,7 +120,11 @@ export default function Navigation() {
           headerShown: false,
         }}
       >
-        <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        {isTablet ? (
+          <Stack.Screen name="TabNavigator" component={DrawerNavigator} />
+        ) : (
+          <Stack.Screen name="TabNavigator" component={TabNavigator} />
+        )}
         <Stack.Screen
           name="NewsDetails"
           component={NewsDetails}
