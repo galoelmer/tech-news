@@ -1,9 +1,11 @@
-import { View, ActivityIndicator, SafeAreaView } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { Text } from "react-native-paper";
 
-import Card from "components/card";
 import ScrollViewWithButton from "components/scrollview-with-button";
+import SafeAreaView from "components/safe-area-view";
 import ImageSlider from "components/image-slider";
+import Card from "components/card";
+
 import { useGetNewsDataQuery } from "services/api";
 
 const Home = () => {
