@@ -1,4 +1,4 @@
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, StyleSheet } from "react-native";
 import { Text } from "react-native-paper";
 
 import ScrollViewWithButton from "components/scrollview-with-button";
@@ -30,7 +30,7 @@ const Home = () => {
       <ScrollViewWithButton>
         <>
           <ImageSlider data={data} />
-          <Text variant="headlineSmall" style={{ marginLeft: 15 }}>
+          <Text variant="headlineSmall" style={styles.titleHeader}>
             Tech News
           </Text>
           {data?.slice(4).map((item) => (
@@ -49,3 +49,11 @@ const Home = () => {
 };
 
 export default Home;
+
+const styles = StyleSheet.create({
+  titleHeader: {
+    fontFamily: "Roboto",
+    color: "#000",
+    marginLeft: 15,
+  },
+});

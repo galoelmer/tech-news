@@ -9,6 +9,8 @@ import {
 } from "react-native";
 import { IconButton, IconButtonProps } from "react-native-paper";
 
+import { isWeb } from "utils/checkPlatform";
+
 interface ScrollToTopProps extends React.PropsWithChildren<{}> {
   scrollviewStyles?: ScrollViewProps["style"];
   buttonStyles?: IconButtonProps["style"];
@@ -44,12 +46,14 @@ const ScrollViewWithButton = ({
         bounces={false}
         showsVerticalScrollIndicator={false}
         onScrollEndDrag={handScroll}
+        onScroll={isWeb ? handScroll : undefined}
+        scrollEventThrottle={20}
         style={scrollviewStyles}
       >
         <>{children}</>
       </ScrollView>
       {displayButton && (
-        <View style={styles.iconContainer}>
+        <View>
           <IconButton
             onPress={handleOnPress}
             icon="arrow-up-thick"
@@ -70,15 +74,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 20,
     right: 10,
-    backgroundColor: "rgba(95,141,218, 0.25)",
-  },
-  iconContainer: {
-    shadowColor: "#000",
-    shadowOffset: {
-      width: 3,
-      height: 4,
-    },
-    shadowOpacity: 0.55,
-    shadowRadius: 10,
+    backgroundColor: isWeb ? "rgba(95,141,218,0.45)" : "rgba(95,141,218, 0.25)",
   },
 });

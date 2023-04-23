@@ -12,6 +12,7 @@ export default StyleSheet.create({
     backgroundColor: "white",
     width: isWeb ? "90%" : width - 40,
     alignSelf: "center",
+    ...(isWeb && { cursor: "pointer" }),
   },
   image: {
     height: 200,

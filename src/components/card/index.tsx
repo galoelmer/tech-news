@@ -4,6 +4,7 @@ import { useNavigation } from "@react-navigation/native";
 
 import { CardProps } from "./types";
 import formatDate from "utils/formatDate";
+import { isWeb } from "utils/checkPlatform";
 
 const CardComponent = ({ id, title, publishedDate, image_url }: CardProps) => {
   const { navigate } = useNavigation();
@@ -37,8 +38,22 @@ const style = StyleSheet.create({
     height: 120,
     backgroundColor: "#f9f9f9",
     flexDirection: "row",
+    borderRadius: 5,
+    ...(isWeb && { cursor: "pointer" }),
+    shadowColor: "#000",
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.05,
+    shadowRadius: 3.22,
   },
-  content: { flex: 1, marginRight: 40, marginLeft: 5 },
+  content: {
+    flex: 1,
+    marginRight: 35,
+    marginLeft: 5,
+    paddingTop: 3,
+  },
   postDateContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -50,7 +65,10 @@ const style = StyleSheet.create({
   },
   postDate: { color: "#949bad" },
   title: {
+    fontFamily: "Roboto",
     marginTop: 8,
+    color: "#000",
+    ...(isWeb && { fontSize: 14 }),
   },
   image: { width: 130, height: 120, borderRadius: 5 },
 });
