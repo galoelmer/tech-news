@@ -10,6 +10,7 @@ import Register from "screens/register";
 import NewsDetails from "screens/news-details";
 import Logo from "components/logo";
 
+import { isWeb } from "utils/checkPlatform";
 import { RootStackParamList } from "./types";
 
 const Tab = createBottomTabNavigator();
@@ -34,15 +35,16 @@ const TabNavigator = () => (
         backgroundColor: "#5f8dda",
       },
       tabBarLabelStyle: {
-        fontSize: 12,
+        fontSize: isWeb ? 10 : 12,
         letterSpacing: 1,
         textTransform: "uppercase",
       },
       tabBarStyle: {
+        borderTopColor: "transparent",
         shadowColor: "#000",
         shadowOffset: {
           width: 0,
-          height: 5,
+          height: -5,
         },
         shadowOpacity: 0.05,
         shadowRadius: 15,
@@ -57,7 +59,7 @@ const TabNavigator = () => (
         tabBarIcon: ({ focused, color }) => (
           <Ionicons
             name={focused ? "newspaper" : "newspaper-outline"}
-            size={30}
+            size={isWeb ? 25 : 30}
             color={focused ? "#5f8dda" : color}
           />
         ),
@@ -71,7 +73,7 @@ const TabNavigator = () => (
         tabBarIcon: ({ focused, color }) => (
           <Ionicons
             name={focused ? "log-in" : "log-in-outline"}
-            size={30}
+            size={isWeb ? 25 : 30}
             color={focused ? "#5f8dda" : color}
           />
         ),
