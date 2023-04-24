@@ -1,6 +1,7 @@
-import { Image, View, StyleSheet, Pressable } from "react-native";
+import { Image, View, Pressable } from "react-native";
 import { Badge, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
+import StyleSheet from "react-native-media-query";
 
 import { CardProps } from "./types";
 import formatDate from "utils/formatDate";
@@ -10,20 +11,28 @@ const CardComponent = ({ id, title, publishedDate, image_url }: CardProps) => {
   const { navigate } = useNavigation();
 
   return (
-    <Pressable onPress={() => navigate("NewsDetails", { id })}>
-      <View style={style.container}>
-        <View style={style.content}>
-          <View style={style.postDateContainer}>
-            <Badge size={5} style={style.badge} />
-            <Text variant="labelSmall" style={style.postDate}>
+    <Pressable
+      onPress={() => navigate("NewsDetails", { id })}
+      style={styles.pressable}
+      dataSet={{ media: ids.pressable }}
+    >
+      <View style={styles.container} dataSet={{ media: ids.container }}>
+        <View style={styles.content}>
+          <View style={styles.postDateContainer}>
+            <Badge size={5} style={styles.badge} />
+            <Text variant="labelSmall" style={styles.postDate}>
               {formatDate(publishedDate)}
             </Text>
           </View>
-          <Text style={style.title} variant="titleMedium">
+          <Text style={styles.title} variant="titleMedium">
             {title}
           </Text>
         </View>
-        <Image source={{ uri: image_url }} style={style.image} />
+        <Image
+          source={{ uri: image_url }}
+          style={styles.image}
+          dataSet={{ media: ids.image }}
+        />
       </View>
     </Pressable>
   );
@@ -31,7 +40,12 @@ const CardComponent = ({ id, title, publishedDate, image_url }: CardProps) => {
 
 export default CardComponent;
 
-const style = StyleSheet.create({
+const { styles, ids } = StyleSheet.create({
+  pressable: {
+    "@media (min-width: 670px)": {
+      width: "50%",
+    },
+  },
   container: {
     margin: 10,
     overflow: "hidden",
@@ -47,6 +61,9 @@ const style = StyleSheet.create({
     },
     shadowOpacity: 0.05,
     shadowRadius: 3.22,
+    "@media (min-width: 670px)": {
+      height: 140,
+    },
   },
   content: {
     flex: 1,
@@ -70,5 +87,12 @@ const style = StyleSheet.create({
     color: "#000",
     ...(isWeb && { fontSize: 14 }),
   },
-  image: { width: 130, height: 120, borderRadius: 5 },
+  image: {
+    width: 130,
+    height: 120,
+    borderRadius: 5,
+    "@media (min-width: 670px)": {
+      height: 140,
+    },
+  },
 });

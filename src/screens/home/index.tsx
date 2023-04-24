@@ -1,5 +1,6 @@
-import { View, ActivityIndicator, StyleSheet } from "react-native";
+import { View, ActivityIndicator } from "react-native";
 import { Text } from "react-native-paper";
+import StyleSheet from "react-native-media-query";
 
 import ScrollViewWithButton from "components/scrollview-with-button";
 import SafeAreaView from "components/safe-area-view";
@@ -7,6 +8,7 @@ import ImageSlider from "components/image-slider";
 import Card from "components/card";
 
 import { useGetNewsDataQuery } from "services/api";
+import { tablet } from "utils/mediaQueries";
 
 const Home = () => {
   // TODO: handle error
@@ -30,18 +32,24 @@ const Home = () => {
       <ScrollViewWithButton>
         <>
           <ImageSlider data={data} />
-          <Text variant="headlineSmall" style={styles.titleHeader}>
+          <Text
+            variant="headlineSmall"
+            style={styles.titleHeader}
+            dataSet={{ media: ids.titleHeader }}
+          >
             Tech News
           </Text>
-          {data?.slice(4).map((item) => (
-            <Card
-              key={item.id + "home"}
-              id={item.id}
-              title={item.title}
-              publishedDate={item.pubDate}
-              image_url={item.image_url}
-            />
-          ))}
+          <View style={styles.container} dataSet={{ media: ids.container }}>
+            {data?.slice(4).map((item) => (
+              <Card
+                key={item.id + "home"}
+                id={item.id}
+                title={item.title}
+                publishedDate={item.pubDate}
+                image_url={item.image_url}
+              />
+            ))}
+          </View>
         </>
       </ScrollViewWithButton>
     </SafeAreaView>
@@ -50,10 +58,20 @@ const Home = () => {
 
 export default Home;
 
-const styles = StyleSheet.create({
+const { styles, ids } = StyleSheet.create({
+  container: {
+    justifyContent: "center",
+    "@media (min-width: 670px)": {
+      flexDirection: "row",
+      flexWrap: "wrap",
+    },
+  },
   titleHeader: {
     fontFamily: "Roboto",
     color: "#000",
     marginLeft: 15,
+    [tablet]: {
+      marginLeft: 20,
+    },
   },
 });
