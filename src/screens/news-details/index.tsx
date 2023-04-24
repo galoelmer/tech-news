@@ -8,7 +8,7 @@ import SafeAreaView from "components/safe-area-view";
 import ScrollViewWithButton from "components/scrollview-with-button";
 import NewBodyText from "./news-body-text";
 
-import styles from "./styles";
+import styles, { ids } from "./styles";
 import { NewsDetailsProps } from "navigation/types";
 
 interface PostCreatorsProps {
@@ -48,16 +48,27 @@ const NewsDetails = ({ route }: NewsDetailsProps) => {
     <SafeAreaView>
       <ScrollViewWithButton scrollviewStyles={{ marginHorizontal: 15 }}>
         <View style={{ marginTop: 10 }}>
-          <Text style={styles.title} variant="titleLarge">
+          <Text
+            style={styles.title}
+            dataSet={{ media: ids.title }}
+            variant="titleLarge"
+          >
             {news?.title}
           </Text>
-          <View style={styles.postDateWrapper}>
+          <View
+            style={styles.postDateWrapper}
+            dataSet={{ media: ids.postDateWrapper }}
+          >
             <Text style={styles.postDate} variant="labelSmall">
               {formatDate(news?.pubDate ?? "")}
             </Text>
             <PostCreators creators={news?.creator} />
           </View>
-          <Image source={{ uri: news?.image_url }} style={styles.image} />
+          <Image
+            source={{ uri: news?.image_url }}
+            style={styles.image}
+            dataSet={{ media: ids.image }}
+          />
           <NewBodyText text={news?.content ?? ""} />
         </View>
       </ScrollViewWithButton>

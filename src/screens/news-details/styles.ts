@@ -1,7 +1,9 @@
-import { StyleSheet } from "react-native";
+import StyleSheet from "react-native-media-query";
 import { isWeb } from "utils/checkPlatform";
 
-export default StyleSheet.create({
+import { tablet } from "utils/mediaQueries";
+
+const { styles, ids } = StyleSheet.create({
   appBar: {
     backgroundColor: "transparent",
     justifyContent: "space-between",
@@ -14,8 +16,19 @@ export default StyleSheet.create({
     fontWeight: "600",
     color: "#000",
     fontFamily: "Roboto",
+    [tablet]: {
+      width: "70%",
+      alignSelf: "center",
+    },
   },
-  postDateWrapper: { flexDirection: "row", marginTop: 10 },
+  postDateWrapper: {
+    flexDirection: "row",
+    marginTop: 10,
+    [tablet]: {
+      width: "70%",
+      alignSelf: "center",
+    },
+  },
   postDate: {
     fontSize: 12,
     color: "#949bad",
@@ -37,6 +50,9 @@ export default StyleSheet.create({
     height: 200,
     borderRadius: 5,
     marginVertical: 15,
+    [tablet]: {
+      height: 300,
+    },
   },
   body: {
     fontFamily: "Roboto",
@@ -44,5 +60,11 @@ export default StyleSheet.create({
     lineHeight: 28,
     letterSpacing: 0.3,
     marginBottom: 14,
+    [tablet]: {
+      width: "70%",
+      alignSelf: "center",
+    },
   },
 });
+
+export { styles as default, ids };
