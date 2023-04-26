@@ -3,7 +3,7 @@ import { Provider as ReduxProvider } from "react-redux";
 import { useFonts } from "expo-font";
 
 import Navigation from "./navigation";
-import BackgroundContainer from "components/background";
+import BackgroundContainer from "@/src/components/gradient-background";
 
 import { store } from "@/src/context/store";
 

@@ -14,6 +14,7 @@ import Login from "screens/login";
 import Register from "screens/register";
 import NewsDetails from "screens/news-details";
 import Logo from "components/logo";
+import Background from "../components/gradient-background";
 
 import { isWeb } from "utils/checkPlatform";
 import { RootStackParamList } from "./types";
@@ -37,9 +38,13 @@ const TabNavigator = () => (
     initialRouteName="News"
     screenOptions={{
       headerTitle: () => <Logo />,
-      headerStyle: {
-        backgroundColor: "#5f8dda",
-      },
+      headerBackground: () => (
+        <Background
+          colors={["#4777B1", "#6173B4", "#746EB4"]}
+          start={{ x: 0.2, y: 1 }}
+          end={{ x: 0.8, y: 0.1 }}
+        />
+      ),
       tabBarLabelStyle: {
         fontSize: isWeb ? 10 : 12,
         letterSpacing: 1,
@@ -94,10 +99,14 @@ const DrawerNavigator = () => {
       initialRouteName="Home"
       screenOptions={{
         headerTitle: () => <Logo />,
-        headerTitleAlign: "center",
-        headerStyle: {
-          backgroundColor: "#5f8dda",
-        },
+        headerBackground: () => (
+          <Background
+            colors={["#4777B1", "#6173B4", "#746EB4"]}
+            start={{ x: 0.2, y: 1 }}
+            end={{ x: 0.8, y: 0.1 }}
+          />
+        ),
+        headerTitleAlign: "left",
         headerLeft: () => null,
         headerRight: () => <DrawerToggleButton tintColor="#fff" />,
         drawerPosition: "right",
@@ -134,7 +143,7 @@ export default function Navigation() {
             presentation: "modal",
             headerShadowVisible: true,
             headerStyle: {
-              backgroundColor: "#285baf",
+              backgroundColor: "#4777B1",
             },
             headerLeft: () => (
               <Ionicons
