@@ -1,8 +1,8 @@
 import { Image, View, Pressable } from "react-native";
 import { Badge, Text } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import StyleSheet from "react-native-media-query";
 
+import useNavigation from "hooks/useNavigation";
 import { CardProps } from "./types";
 import formatDate from "utils/formatDate";
 import { isWeb } from "utils/checkPlatform";

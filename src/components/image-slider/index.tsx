@@ -1,12 +1,12 @@
 import { useState } from "react";
 import { View, Image, Pressable } from "react-native";
 import { Text } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
 import Swiper, { SwiperControlsProps } from "react-native-web-swiper";
 
 import TapGestureDetector from "./tap-gesture-detector";
 import { ArrowLeftButton, ArrowRightButton } from "./chevron-icon-button";
 
+import useNavigation from "hooks/useNavigation";
 import styles, { ids } from "./styles";
 import { isWeb } from "utils/checkPlatform";
 import { Article } from "context/types";
@@ -19,12 +19,12 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
   const [article, setArticle] = useState(data[0]);
   const { navigate } = useNavigation();
 
-  // TODO: fix type error
   const handlePress = (id?: string | undefined) =>
     navigate("NewsDetails", { id: id ?? article.id });
 
   return (
     <>
+      {/* TODO: fix android gesture not working on android */}
       <TapGestureDetector onPress={handlePress}>
         <View style={styles.container} dataSet={{ media: ids.container }}>
           <Swiper
