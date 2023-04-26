@@ -24,7 +24,6 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
 
   return (
     <>
-      {/* TODO: fix android gesture not working on android */}
       <TapGestureDetector onPress={handlePress}>
         <View style={styles.container} dataSet={{ media: ids.container }}>
           <Swiper

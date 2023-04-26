@@ -1,5 +1,9 @@
 import { PropsWithChildren } from "react";
-import { Gesture, GestureDetector } from "react-native-gesture-handler";
+import {
+  Gesture,
+  GestureDetector,
+  GestureHandlerRootView,
+} from "react-native-gesture-handler";
 
 import { isWeb } from "utils/checkPlatform";
 
@@ -16,7 +20,11 @@ const TapGestureDetector = ({ children, onPress }: TapGestureDetectorProps) => {
     .onStart(() => onPress())
     .runOnJS(true);
 
-  return <GestureDetector gesture={tapGesture}>{children}</GestureDetector>;
+  return (
+    <GestureHandlerRootView>
+      <GestureDetector gesture={tapGesture}>{children}</GestureDetector>
+    </GestureHandlerRootView>
+  );
 };
 
 export default TapGestureDetector;
