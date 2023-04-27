@@ -1,13 +1,18 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import {
-  View,
   ScrollView,
-  StyleSheet,
   ScrollViewProps,
   NativeSyntheticEvent,
   NativeScrollEvent,
+  Dimensions,
 } from "react-native";
 import { IconButton, IconButtonProps } from "react-native-paper";
+import Animated, {
+  withSpring,
+  useSharedValue,
+  useAnimatedStyle,
+} from "react-native-reanimated";
+import StyleSheet from "react-native-media-query";
 
 import { isWeb } from "utils/checkPlatform";
 
@@ -21,21 +26,33 @@ const ScrollViewWithButton = ({
   scrollviewStyles,
   buttonStyles,
 }: ScrollToTopProps) => {
-  const [displayButton, setDisplayButton] = useState(false);
   const scrollViewRef = useRef<ScrollView>(null);
+  const offset = useSharedValue(0);
+  const { width, height } = Dimensions.get("window");
+
+  const animatedStyles = useAnimatedStyle(() => {
+    return {
+      transform: [
+        { translateY: offset.value < 0 ? offset.value : height },
+        ...(isWeb ? [] : [{ translateX: width - 60 }]),
+      ],
+    };
+  });
 
   const handleOnPress = () => {
     scrollViewRef.current?.scrollTo({ y: 0, animated: true });
-    setDisplayButton(false);
   };
 
   const handScroll = ({
     nativeEvent,
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (nativeEvent.contentOffset.y > 250) {
-      setDisplayButton(true);
+      offset.value = withSpring(-100, {
+        damping: 20,
+        stiffness: 90,
+      });
     } else {
-      setDisplayButton(false);
+      offset.value = withSpring(height);
     }
   };
 
@@ -45,35 +62,38 @@ const ScrollViewWithButton = ({
         ref={scrollViewRef}
         bounces={false}
         showsVerticalScrollIndicator={false}
-        onScrollEndDrag={handScroll}
-        onScroll={isWeb ? handScroll : undefined}
+        onScroll={handScroll}
         scrollEventThrottle={20}
         style={scrollviewStyles}
       >
         <>{children}</>
       </ScrollView>
-      {displayButton && (
-        <View>
-          <IconButton
-            onPress={handleOnPress}
-            icon="arrow-up-thick"
-            size={30}
-            iconColor="#fff"
-            style={[styles.icon, buttonStyles]}
-          />
-        </View>
-      )}
+      <Animated.View
+        style={[styles.container, animatedStyles]}
+        dataSet={{ media: ids.container }}
+      >
+        <IconButton
+          onPress={handleOnPress}
+          icon="arrow-up-thick"
+          size={30}
+          iconColor="#fff"
+          style={[styles.icon, buttonStyles]}
+        />
+      </Animated.View>
     </>
   );
 };
 
 export default ScrollViewWithButton;
 
-const styles = StyleSheet.create({
+const { styles, ids } = StyleSheet.create({
+  container: {
+    ...(isWeb && {
+      alignItems: "flex-end",
+      padding: 10,
+    }),
+  },
   icon: {
-    position: "absolute",
-    bottom: 20,
-    right: 10,
     backgroundColor: isWeb ? "rgba(95,141,218,0.45)" : "rgba(95,141,218, 0.25)",
   },
 });
