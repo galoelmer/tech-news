@@ -1,6 +1,6 @@
 import "react-native-gesture-handler";
 import { registerRootComponent } from "expo";
-import { makeServer } from "@/server";
+import { makeServer } from "./server";
 
 import App from "./src/App";
 

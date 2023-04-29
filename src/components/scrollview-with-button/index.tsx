@@ -90,7 +90,7 @@ const { styles, ids } = StyleSheet.create({
   container: {
     ...(isWeb && {
       alignItems: "flex-end",
-      padding: 10,
+      flex: 0,
     }),
   },
   icon: {
