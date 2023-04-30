@@ -8,7 +8,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { useMediaQuery } from "react-responsive";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
 import Home from "@/screens/home";
 import NewsDetails from "@/screens/news-details";
@@ -73,9 +73,17 @@ export default function Navigation() {
     <NavigationContainer linking={linking}>
       <BottomTabs.Navigator
         initialRouteName="Home"
+        tabBar={isMobile ? undefined : () => null}
         screenOptions={{
           headerTitle: () => (
-            <Link to={{ screen: "NewsFeed" }}>
+            <Link
+              to={{
+                screen: "Home",
+                params: {
+                  screen: "NewsFeed",
+                },
+              }}
+            >
               <Logo resizeMode="contain" width={150} />
             </Link>
           ),
@@ -88,23 +96,27 @@ export default function Navigation() {
           ),
           headerRight: () =>
             isMobile ? null : <Link to={{ screen: "Account" }}>Login</Link>,
+          tabBarActiveTintColor: "#fff",
+          tabBarInactiveTintColor: "#a6bedb",
+          tabBarLabelPosition: "beside-icon",
           tabBarLabelStyle: {
-            fontSize: 12,
-            letterSpacing: 1,
+            fontFamily: "Roboto",
+            fontWeight: "bold",
             textTransform: "uppercase",
+            letterSpacing: 2,
           },
           tabBarStyle: {
+            backgroundColor: "#4777B1",
             borderTopColor: "transparent",
             shadowColor: "#000",
             shadowOffset: {
               width: 0,
               height: -5,
             },
-            shadowOpacity: 0.05,
+            shadowOpacity: 0.2,
             shadowRadius: 15,
           },
         }}
-        tabBar={isMobile ? undefined : () => null}
       >
         <BottomTabs.Screen
           name="Home"
@@ -112,16 +124,18 @@ export default function Navigation() {
           listeners={({ navigation }) => ({
             tabPress: ({ preventDefault }) => {
               preventDefault();
-              navigation.navigate("NewsFeed");
+              navigation.navigate("Home", { screen: "NewsFeed" });
             },
           })}
           options={{
             tabBarLabel: "News",
-            tabBarIcon: ({ focused, color }) => (
-              <Ionicons
-                name={focused ? "newspaper" : "newspaper-outline"}
-                size={30}
-                color={focused ? "#5f8dda" : color}
+            tabBarIcon: ({ focused, color, size }) => (
+              <Icon
+                name={
+                  focused ? "newspaper-variant" : "newspaper-variant-outline"
+                }
+                size={focused ? size + 5 : size}
+                color={color}
               />
             ),
           }}
@@ -131,11 +145,11 @@ export default function Navigation() {
           component={AccountTopTabs}
           options={{
             tabBarLabel: "Login",
-            tabBarIcon: ({ focused, color }) => (
-              <Ionicons
-                name={focused ? "log-in" : "log-in-outline"}
-                size={30}
-                color={focused ? "#5f8dda" : color}
+            tabBarIcon: ({ focused, color, size }) => (
+              <Icon
+                name={focused ? "account-circle" : "account-circle-outline"}
+                size={focused ? size + 5 : size}
+                color={color}
               />
             ),
           }}
