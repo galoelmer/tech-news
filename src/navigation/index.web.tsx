@@ -16,6 +16,7 @@ import Login from "@/screens/login";
 import Register from "@/screens/register";
 import Logo from "@/components/logo";
 import GradientBackground from "@/components/gradient-background";
+import HeaderRightButton from "./header-right-buttons";
 
 import { RootStackParamList } from "./types";
 
@@ -94,8 +95,7 @@ export default function Navigation() {
               end={{ x: 0.8, y: 0.1 }}
             />
           ),
-          headerRight: () =>
-            isMobile ? null : <Link to={{ screen: "Account" }}>Login</Link>,
+          headerRight: () => (isMobile ? null : <HeaderRightButton />),
           tabBarActiveTintColor: "#fff",
           tabBarInactiveTintColor: "#a6bedb",
           tabBarLabelPosition: "beside-icon",
@@ -128,12 +128,10 @@ export default function Navigation() {
             },
           })}
           options={{
-            tabBarLabel: "News",
+            tabBarLabel: "Home",
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
-                name={
-                  focused ? "newspaper-variant" : "newspaper-variant-outline"
-                }
+                name={focused ? "home-variant" : "home-variant-outline"}
                 size={focused ? size + 5 : size}
                 color={color}
               />
