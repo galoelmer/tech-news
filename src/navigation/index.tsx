@@ -6,7 +6,7 @@ import {
   createDrawerNavigator,
   DrawerToggleButton,
 } from "@react-navigation/drawer";
-import Ionicons from "@expo/vector-icons/Ionicons";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useMediaQuery } from "react-responsive";
 
 import Home from "screens/home";
@@ -14,9 +14,8 @@ import Login from "screens/login";
 import Register from "screens/register";
 import NewsDetails from "screens/news-details";
 import Logo from "components/logo";
-import Background from "../components/gradient-background";
+import BackgroundGradient from "components/gradient-background";
 
-import { isWeb } from "utils/checkPlatform";
 import { RootStackParamList } from "./types";
 
 const Tab = createBottomTabNavigator();
@@ -35,22 +34,27 @@ const LoginStack = () => {
 
 const TabNavigator = () => (
   <Tab.Navigator
-    initialRouteName="News"
+    initialRouteName="Home"
     screenOptions={{
       headerTitle: () => <Logo />,
       headerBackground: () => (
-        <Background
+        <BackgroundGradient
           colors={["#4777B1", "#6173B4", "#746EB4"]}
           start={{ x: 0.2, y: 1 }}
           end={{ x: 0.8, y: 0.1 }}
         />
       ),
+      tabBarActiveTintColor: "#fff",
+      tabBarInactiveTintColor: "#a6bedb",
       tabBarLabelStyle: {
-        fontSize: isWeb ? 10 : 12,
-        letterSpacing: 1,
+        fontSize: 12,
+        fontFamily: "Roboto",
+        fontWeight: "bold",
         textTransform: "uppercase",
+        letterSpacing: 2,
       },
       tabBarStyle: {
+        backgroundColor: "#4777B1",
         borderTopColor: "transparent",
         shadowColor: "#000",
         shadowOffset: {
@@ -63,15 +67,15 @@ const TabNavigator = () => (
     }}
   >
     <Tab.Screen
-      name="News"
+      name="Home"
       component={Home}
       options={{
-        tabBarLabel: "News",
-        tabBarIcon: ({ focused, color }) => (
-          <Ionicons
-            name={focused ? "newspaper" : "newspaper-outline"}
-            size={isWeb ? 25 : 30}
-            color={focused ? "#5f8dda" : color}
+        tabBarLabel: "Home",
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon
+            name={focused ? "home-variant" : "home-variant-outline"}
+            size={focused ? size + 5 : size}
+            color={color}
           />
         ),
       }}
@@ -81,11 +85,11 @@ const TabNavigator = () => (
       component={LoginStack}
       options={{
         tabBarLabel: "Login",
-        tabBarIcon: ({ focused, color }) => (
-          <Ionicons
-            name={focused ? "log-in" : "log-in-outline"}
-            size={isWeb ? 25 : 30}
-            color={focused ? "#5f8dda" : color}
+        tabBarIcon: ({ focused, color, size }) => (
+          <Icon
+            name={focused ? "account-circle" : "account-circle-outline"}
+            size={focused ? size + 5 : size}
+            color={color}
           />
         ),
       }}
@@ -100,7 +104,7 @@ const DrawerNavigator = () => {
       screenOptions={{
         headerTitle: () => <Logo />,
         headerBackground: () => (
-          <Background
+          <BackgroundGradient
             colors={["#4777B1", "#6173B4", "#746EB4"]}
             start={{ x: 0.2, y: 1 }}
             end={{ x: 0.8, y: 0.1 }}
@@ -125,9 +129,7 @@ export default function Navigation() {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="TabNavigator"
-        screenOptions={{
-          headerShown: false,
-        }}
+        screenOptions={{ headerShown: false }}
       >
         {isTablet ? (
           <Stack.Screen name="TabNavigator" component={DrawerNavigator} />
@@ -135,7 +137,7 @@ export default function Navigation() {
           <Stack.Screen name="TabNavigator" component={TabNavigator} />
         )}
         <Stack.Screen
-          name="NewsDetails"
+          name="Article"
           component={NewsDetails}
           options={({ navigation }) => ({
             headerShown: true,
@@ -146,31 +148,19 @@ export default function Navigation() {
               backgroundColor: "#4777B1",
             },
             headerLeft: () => (
-              <Ionicons
+              <Icon
                 onPress={navigation.goBack}
-                name="arrow-back"
+                name="arrow-left-thick"
                 size={30}
                 color="#eef3fb"
-                style={{
-                  ...(isWeb && {
-                    marginLeft: 12,
-                    cursor: "pointer",
-                  }),
-                }}
               />
             ),
             headerRight: () => (
-              <Ionicons
+              <Icon
                 onPress={() => {}}
                 name="bookmark-outline"
                 size={30}
                 color="#eef3fb"
-                style={{
-                  ...(isWeb && {
-                    marginRight: 12,
-                    cursor: "pointer",
-                  }),
-                }}
               />
             ),
           })}

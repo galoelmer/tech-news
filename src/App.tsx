@@ -1,4 +1,3 @@
-import { View } from "react-native";
 import { Provider as PaperProvider } from "react-native-paper";
 import { Provider as ReduxProvider } from "react-redux";
 import { useFonts } from "expo-font";
@@ -20,16 +19,9 @@ export default function App() {
   return (
     <ReduxProvider store={store}>
       <PaperProvider>
-        <View
-          style={{
-            flex: 1,
-            overflow: "hidden",
-          }}
-        >
-          <BackgroundContainer>
-            <Navigation />
-          </BackgroundContainer>
-        </View>
+        <BackgroundContainer>
+          <Navigation />
+        </BackgroundContainer>
       </PaperProvider>
     </ReduxProvider>
   );

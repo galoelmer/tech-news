@@ -20,7 +20,7 @@ const ImageSlider = ({ data }: ImageSliderProps) => {
   const { navigate } = useNavigation();
 
   const handlePress = (id?: string | undefined) =>
-    navigate("NewsDetails", { id: id ?? article.id });
+    navigate("Article", { id: id ?? article.id });
 
   return (
     <>

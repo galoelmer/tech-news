@@ -11,10 +11,10 @@ export type RootStackParamList = {
   Home: undefined;
   Account: NavigatorScreenParams<AccountTabsParamList>;
   TabNavigator: undefined;
-  NewsDetails: { id?: string };
+  Article: { id?: string };
 };
 
 export type NewsDetailsProps = NativeStackScreenProps<
   RootStackParamList,
-  "NewsDetails"
+  "Article"
 >;

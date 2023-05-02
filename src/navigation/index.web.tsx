@@ -27,13 +27,19 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 const HomeStackScreen = () => {
   return (
     <Stack.Navigator
-      initialRouteName="NewsFeed"
+      initialRouteName="Home"
       screenOptions={{
         headerShown: false,
+        contentStyle: {
+          backgroundColor: "transparent",
+          width: "100%",
+          maxWidth: 1200,
+          marginHorizontal: "auto",
+        },
       }}
     >
-      <Stack.Screen name="NewsFeed" component={Home} />
-      <Stack.Screen name="NewsDetails" component={NewsDetails} />
+      <Stack.Screen name="Home" component={Home} />
+      <Stack.Screen name="Article" component={NewsDetails} />
     </Stack.Navigator>
   );
 };
@@ -51,10 +57,10 @@ const linking: LinkingOptions<RootStackParamList> = {
   prefixes: [Linking.createURL("/")],
   config: {
     screens: {
-      Home: {
+      NewsFeed: {
         screens: {
-          NewsFeed: "",
-          NewsDetails: "news/:id",
+          Home: "",
+          Article: "article/:id",
         },
       },
       Account: {
@@ -73,15 +79,16 @@ export default function Navigation() {
   return (
     <NavigationContainer linking={linking}>
       <BottomTabs.Navigator
-        initialRouteName="Home"
+        id="NewsFeed"
+        initialRouteName="NewsFeed"
         tabBar={isMobile ? undefined : () => null}
         screenOptions={{
           headerTitle: () => (
             <Link
               to={{
-                screen: "Home",
+                screen: "NewsFeed",
                 params: {
-                  screen: "NewsFeed",
+                  screen: "Home",
                 },
               }}
             >
@@ -119,12 +126,12 @@ export default function Navigation() {
         }}
       >
         <BottomTabs.Screen
-          name="Home"
+          name="NewsFeed"
           component={HomeStackScreen}
           listeners={({ navigation }) => ({
             tabPress: ({ preventDefault }) => {
               preventDefault();
-              navigation.navigate("Home", { screen: "NewsFeed" });
+              navigation.navigate("NewsFeed", { screen: "Home" });
             },
           })}
           options={{

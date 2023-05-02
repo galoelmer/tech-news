@@ -7,14 +7,19 @@ import { CardProps } from "./types";
 import formatDate from "utils/formatDate";
 import { isWeb } from "utils/checkPlatform";
 
-const CardComponent = ({ id, title, publishedDate, image_url }: CardProps) => {
+const CardComponent = ({
+  id,
+  title,
+  publishedDate,
+  image_url,
+  width,
+}: CardProps) => {
   const { navigate } = useNavigation();
 
   return (
     <Pressable
-      onPress={() => navigate("NewsDetails", { id })}
-      style={styles.pressable}
-      dataSet={{ media: ids.pressable }}
+      onPress={() => navigate("Article", { id })}
+      style={{ width: width || "100%" }}
     >
       <View style={styles.container} dataSet={{ media: ids.container }}>
         <View style={styles.content}>
@@ -41,11 +46,6 @@ const CardComponent = ({ id, title, publishedDate, image_url }: CardProps) => {
 export default CardComponent;
 
 const { styles, ids } = StyleSheet.create({
-  pressable: {
-    "@media (min-width: 670px)": {
-      width: "50%",
-    },
-  },
   container: {
     margin: 10,
     overflow: "hidden",

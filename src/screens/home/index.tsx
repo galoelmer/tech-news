@@ -1,10 +1,11 @@
 import { View, ActivityIndicator } from "react-native";
-import { Text } from "react-native-paper";
 import StyleSheet from "react-native-media-query";
+import { useMediaQuery } from "react-responsive";
 
 import ScrollViewWithButton from "components/scrollview-with-button";
 import SafeAreaView from "components/safe-area-view";
 import ImageSlider from "components/image-slider";
+import FeatureNews from "./featureNews";
 import Card from "components/card";
 
 import { useGetNewsDataQuery } from "services/api";
@@ -14,6 +15,9 @@ const Home = () => {
   // TODO: handle error
   // TODO: add skeleton loading
   const { data, error, isLoading } = useGetNewsDataQuery();
+  const isDesktop = useMediaQuery({ query: "(min-width: 1020px)" });
+  const isSmallTablet = useMediaQuery({ query: "(min-width: 425px )" });
+  const isLargeTablet = useMediaQuery({ query: "(min-width: 760px)" });
 
   if (isLoading) {
     return (
@@ -31,15 +35,15 @@ const Home = () => {
     <SafeAreaView>
       <ScrollViewWithButton>
         <>
-          <ImageSlider data={data} />
-          <Text
-            variant="headlineSmall"
-            style={styles.titleHeader}
-            dataSet={{ media: ids.titleHeader }}
+          {isDesktop ? (
+            <FeatureNews data={data} />
+          ) : (
+            <ImageSlider data={data} />
+          )}
+          <View
+            style={styles.cardsContainer}
+            dataSet={{ media: ids.cardsContainer }}
           >
-            Tech News
-          </Text>
-          <View style={styles.container} dataSet={{ media: ids.container }}>
             {data?.slice(4).map((item) => (
               <Card
                 key={item.id + "home"}
@@ -47,6 +51,7 @@ const Home = () => {
                 title={item.title}
                 publishedDate={item.pubDate}
                 image_url={item.image_url}
+                width={isLargeTablet ? "45%" : isSmallTablet ? "85%" : "100%"}
               />
             ))}
           </View>
@@ -59,19 +64,25 @@ const Home = () => {
 export default Home;
 
 const { styles, ids } = StyleSheet.create({
-  container: {
+  cardsContainer: {
     justifyContent: "center",
+    alignItems: "center",
     "@media (min-width: 670px)": {
+      alignSelf: "center",
       flexDirection: "row",
       flexWrap: "wrap",
+    },
+    "@media (min-width: 1020px)": {
+      width: "85%",
+      justifyContent: "space-evenly",
     },
   },
   titleHeader: {
     fontFamily: "Roboto",
     color: "#000",
-    marginLeft: 15,
+    textAlign: "center",
     [tablet]: {
-      marginLeft: 20,
+      marginLeft: 30,
     },
   },
 });
