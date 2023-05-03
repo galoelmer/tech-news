@@ -11,12 +11,13 @@ import { useMediaQuery } from "react-responsive";
 
 import Home from "screens/home";
 import Login from "screens/login";
-import Register from "screens/register";
+import SignUp from "@/screens/signup";
 import NewsDetails from "screens/news-details";
 import Logo from "components/logo";
 import BackgroundGradient from "components/gradient-background";
 
 import { RootStackParamList } from "./types";
+import ResetPassword from "@/screens/reset-password";
 
 const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
@@ -25,9 +26,45 @@ const Drawer = createDrawerNavigator();
 
 const LoginStack = () => {
   return (
-    <TopTab.Navigator>
-      <Tab.Screen name="Login" component={Login} />
-      <Tab.Screen name="Register" component={Register} />
+    <TopTab.Navigator
+      screenOptions={{
+        tabBarLabelStyle: {
+          fontFamily: "Roboto",
+          fontWeight: "bold",
+          letterSpacing: 2,
+        },
+        tabBarItemStyle: {
+          flexDirection: "row",
+        },
+      }}
+    >
+      <Tab.Screen
+        name="Login"
+        component={Login}
+        options={{
+          tabBarIcon: ({ focused, color }) => (
+            <Icon
+              name={focused ? "account" : "account-outline"}
+              size={20}
+              color={color}
+            />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="Signup"
+        component={SignUp}
+        options={{
+          tabBarLabel: "Sign Up",
+          tabBarIcon: ({ focused, color }) => (
+            <Icon
+              name={focused ? "account-plus" : "account-plus-outline"}
+              size={20}
+              color={color}
+            />
+          ),
+        }}
+      />
     </TopTab.Navigator>
   );
 };
@@ -159,6 +196,28 @@ export default function Navigation() {
               <Icon
                 onPress={() => {}}
                 name="bookmark-outline"
+                size={30}
+                color="#eef3fb"
+              />
+            ),
+          })}
+        />
+        <Stack.Screen
+          name="ResetPassword"
+          component={ResetPassword}
+          options={({ navigation }) => ({
+            headerShown: true,
+            title: "Reset Password",
+            headerTintColor: "#fff",
+            presentation: "modal",
+            headerShadowVisible: true,
+            headerStyle: {
+              backgroundColor: "#4777B1",
+            },
+            headerLeft: () => (
+              <Icon
+                onPress={navigation.goBack}
+                name="arrow-left-thick"
                 size={30}
                 color="#eef3fb"
               />

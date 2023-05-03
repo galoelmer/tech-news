@@ -13,7 +13,7 @@ import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import Home from "@/screens/home";
 import NewsDetails from "@/screens/news-details";
 import Login from "@/screens/login";
-import Register from "@/screens/register";
+import Register from "@/screens/signup";
 import Logo from "@/components/logo";
 import GradientBackground from "@/components/gradient-background";
 import HeaderRightButton from "./header-right-buttons";
