@@ -36,6 +36,9 @@ const LoginStack = () => {
         tabBarItemStyle: {
           flexDirection: "row",
         },
+        tabBarIndicatorStyle: {
+          backgroundColor: "#6173B4",
+        },
       }}
     >
       <Tab.Screen

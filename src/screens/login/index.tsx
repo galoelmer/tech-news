@@ -1,11 +1,9 @@
 import { useState } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, StyleSheet } from "react-native";
 import { Button, TextInput, HelperText } from "react-native-paper";
 import { Formik } from "formik";
 import { Link } from "@react-navigation/native";
 import * as yup from "yup";
-
-import { isWeb } from "@/utils/checkPlatform";
 
 let LoginSchema = yup.object().shape({
   email: yup
@@ -17,14 +15,6 @@ let LoginSchema = yup.object().shape({
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
-
-  const handleClickShowPassword = () => {
-    setShowPassword((prevState) => !prevState);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
 
   return (
     <View style={styles.container}>
@@ -72,9 +62,6 @@ const LoginForm = () => {
             <TextInput
               id="password"
               label="Password"
-              autoFocus
-              autoComplete="password"
-              autoCapitalize="none"
               mode={"outlined"}
               outlineColor="#ddd"
               activeOutlineColor="#4E89AE"
@@ -106,6 +93,7 @@ const LoginForm = () => {
               onPress={submitForm}
               disabled={isSubmitting}
               loading={isSubmitting}
+              labelStyle={{ letterSpacing: 2 }}
             >
               LOGIN
             </Button>
@@ -129,7 +117,7 @@ export default LoginForm;
 const styles = StyleSheet.create({
   container: {
     backgroundColor: "#fff",
-    paddingTop: 20,
+    paddingTop: 40,
     flex: 1,
     flexDirection: "column",
     alignItems: "center",
@@ -141,7 +129,6 @@ const styles = StyleSheet.create({
   input: {
     backgroundColor: "#fff",
     width: "85%",
-    marginTop: 20,
   },
   submitButton: {
     backgroundColor: "#4E89AE",
@@ -158,5 +145,6 @@ const styles = StyleSheet.create({
   linkText: {
     color: "#4E89AE",
     marginTop: 15,
+    letterSpacing: 1,
   },
 });
