@@ -4,8 +4,6 @@ import clc from "cli-color";
 
 import data from "./mock-data";
 
-const token = nanoid();
-
 export function makeServer({ environment = "test" } = {}) {
   console.log(clc.bgMagentaBright("🚀 ~ Development Server running..."));
 
@@ -30,21 +28,30 @@ export function makeServer({ environment = "test" } = {}) {
         throw new Error("Reset password not available on Dev mode");
       });
 
-      this.post("/login", (_, request) => {
+      this.post("/login", (schema, request) => {
         const { email, password } = JSON.parse(request.requestBody);
 
-        if (email === "test@email.com" && password === "123Pass") {
+        if (email === "test@email.com" && password === "1234") {
           return new Response(
             200,
             { "Content-Type": "application/json" },
-            { token }
+            {
+              token: nanoid(),
+              userId: nanoid(),
+              userName: "Test User",
+              favorites: schema.db.data.slice(4, 8),
+              randomNameCreated: false,
+            }
           );
         }
 
         return new Response(
-          500,
+          403,
           { "Content-Type": "application/json" },
-          { general: "Login not available on Dev Mode" }
+          {
+            status: "FETCH_ERROR",
+            error: "Invalid email or password",
+          }
         );
       });
 
