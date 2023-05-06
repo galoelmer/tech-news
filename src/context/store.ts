@@ -1,11 +1,10 @@
 import { configureStore } from "@reduxjs/toolkit";
 import { setupListeners } from "@reduxjs/toolkit/query";
 
-import { newsApi } from "services/api";
-// import newsReducer from "./reducers/news-reducer";
+import { api } from "services/api";
 import authReducer from "./reducers/auth-reducer";
 
-const middlewares = [newsApi.middleware];
+const middlewares = [api.middleware];
 
 if (__DEV__) {
   const createDebugger = require("redux-flipper").default;
@@ -14,14 +13,11 @@ if (__DEV__) {
 
 export const store = configureStore({
   reducer: {
-    // news: newsReducer,
     auth: authReducer,
-    [newsApi.reducerPath]: newsApi.reducer,
+    [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware({
-      // immutableCheck: false,
-    }).concat(middlewares),
+    getDefaultMiddleware().concat(middlewares),
   devTools: process.env.NODE_ENV !== "production",
 });
 

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-import type { PayloadAction } from "@reduxjs/toolkit";
-import type { RootState } from "../store";
+// import type { PayloadAction } from "@reduxjs/toolkit";
+// import type { RootState } from "../store";
 import { InitialState } from "../types";
 
 const initialState: InitialState = {
@@ -14,13 +14,9 @@ const initialState: InitialState = {
 export const newsSlice = createSlice({
   name: "news",
   initialState,
-  reducers: {
-    increaseNewsDataOffset: (state) => {
-      state.offset += 12;
-    },
-  },
+  reducers: {},
 });
 
-export const { increaseNewsDataOffset } = newsSlice.actions;
+export const {} = newsSlice.actions;
 
 export default newsSlice.reducer;

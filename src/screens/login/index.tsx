@@ -1,9 +1,17 @@
-import { useState } from "react";
-import { View, StyleSheet } from "react-native";
-import { Button, TextInput, HelperText } from "react-native-paper";
-import { Formik } from "formik";
+import { useState, useCallback } from "react";
+import { View } from "react-native";
 import { Link } from "@react-navigation/native";
+import { Button, TextInput, HelperText } from "react-native-paper";
+import { Formik, FormikHelpers } from "formik";
 import * as yup from "yup";
+
+import { useLoginUserMutation } from "@/services/api";
+import { isFetchBaseQueryError } from "@/services/helpers";
+import useNavigation from "@/hooks/useNavigation";
+// import useAuth from "@/hooks/useAuth";
+
+import styles from "./styles";
+import type { InitialValues } from "./types";
 
 let LoginSchema = yup.object().shape({
   email: yup
@@ -14,17 +22,36 @@ let LoginSchema = yup.object().shape({
 });
 
 const LoginForm = () => {
+  // TODO: add redirect if user is already logged in
+  // const { isAuth } = useAuth();
+  const { navigate } = useNavigation();
+  const [loginUser] = useLoginUserMutation();
   const [showPassword, setShowPassword] = useState(false);
+
+  const handleFormSubmit = useCallback(
+    async (values: InitialValues, helpers: FormikHelpers<InitialValues>) => {
+      try {
+        await loginUser(values).unwrap();
+        navigate("Home");
+      } catch (err) {
+        if (isFetchBaseQueryError(err)) {
+          const errorMessage =
+            "error" in err ? err.error : "Something went wrong";
+          helpers.setFieldError("message", errorMessage);
+        }
+      } finally {
+        helpers.setSubmitting(false);
+      }
+    },
+    []
+  );
 
   return (
     <View style={styles.container}>
       <Formik
-        initialValues={{ email: "", password: "" }}
+        initialValues={{ email: "", password: "", message: "" }}
         validationSchema={LoginSchema}
-        onSubmit={(values, { setSubmitting }) => {
-          console.log(values);
-          setTimeout(() => setSubmitting(false), 2000);
-        }}
+        onSubmit={handleFormSubmit}
       >
         {({
           errors,
@@ -86,6 +113,9 @@ const LoginForm = () => {
             >
               {errors.password}
             </HelperText>
+            <HelperText type="error" visible={!!errors.message}>
+              {errors.message}
+            </HelperText>
             <Button
               style={styles.submitButton}
               mode={"elevated"}
@@ -113,38 +143,3 @@ const LoginForm = () => {
 };
 
 export default LoginForm;
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: "#fff",
-    paddingTop: 40,
-    flex: 1,
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  form: {
-    alignItems: "center",
-    width: "100%",
-  },
-  input: {
-    backgroundColor: "#fff",
-    width: "85%",
-  },
-  submitButton: {
-    backgroundColor: "#4E89AE",
-    width: "85%",
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  linksContainer: {
-    flexDirection: "column",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginTop: 20,
-  },
-  linkText: {
-    color: "#4E89AE",
-    marginTop: 15,
-    letterSpacing: 1,
-  },
-});

@@ -12,6 +12,7 @@ export type RootStackParamList = {
   Account: NavigatorScreenParams<AccountTabsParamList>;
   TabNavigator: undefined;
   Article: { id?: string };
+  Bookmarks: undefined;
   ResetPassword: undefined;
 };
 

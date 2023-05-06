@@ -12,12 +12,15 @@ import { useMediaQuery } from "react-responsive";
 import Home from "screens/home";
 import Login from "screens/login";
 import SignUp from "@/screens/signup";
+import Bookmarks from "@/screens/bookmarks";
 import NewsDetails from "screens/news-details";
+import ResetPassword from "@/screens/reset-password";
+
 import Logo from "components/logo";
 import BackgroundGradient from "components/gradient-background";
 
+import useAuth from "@/hooks/useAuth";
 import { RootStackParamList } from "./types";
-import ResetPassword from "@/screens/reset-password";
 
 const Tab = createBottomTabNavigator();
 const TopTab = createMaterialTopTabNavigator();
@@ -72,70 +75,90 @@ const LoginStack = () => {
   );
 };
 
-const TabNavigator = () => (
-  <Tab.Navigator
-    initialRouteName="Home"
-    screenOptions={{
-      headerTitle: () => <Logo />,
-      headerBackground: () => (
-        <BackgroundGradient
-          colors={["#4777B1", "#6173B4", "#746EB4"]}
-          start={{ x: 0.2, y: 1 }}
-          end={{ x: 0.8, y: 0.1 }}
-        />
-      ),
-      tabBarActiveTintColor: "#fff",
-      tabBarInactiveTintColor: "#a6bedb",
-      tabBarLabelStyle: {
-        fontSize: 12,
-        fontFamily: "Roboto",
-        fontWeight: "bold",
-        textTransform: "uppercase",
-        letterSpacing: 2,
-      },
-      tabBarStyle: {
-        backgroundColor: "#4777B1",
-        borderTopColor: "transparent",
-        shadowColor: "#000",
-        shadowOffset: {
-          width: 0,
-          height: -5,
+const TabNavigator = () => {
+  const { isAuth } = useAuth();
+  return (
+    <Tab.Navigator
+      initialRouteName="Home"
+      screenOptions={{
+        headerTitle: () => <Logo />,
+        headerBackground: () => (
+          <BackgroundGradient
+            colors={["#4777B1", "#6173B4", "#746EB4"]}
+            start={{ x: 0.2, y: 1 }}
+            end={{ x: 0.8, y: 0.1 }}
+          />
+        ),
+        tabBarActiveTintColor: "#fff",
+        tabBarInactiveTintColor: "#a6bedb",
+        tabBarLabelStyle: {
+          fontSize: 12,
+          fontFamily: "Roboto",
+          fontWeight: "bold",
+          textTransform: "uppercase",
+          letterSpacing: 2,
         },
-        shadowOpacity: 0.05,
-        shadowRadius: 15,
-      },
-    }}
-  >
-    <Tab.Screen
-      name="Home"
-      component={Home}
-      options={{
-        tabBarLabel: "Home",
-        tabBarIcon: ({ focused, color, size }) => (
-          <Icon
-            name={focused ? "home-variant" : "home-variant-outline"}
-            size={focused ? size + 5 : size}
-            color={color}
-          />
-        ),
+        tabBarStyle: {
+          backgroundColor: "#4777B1",
+          borderTopColor: "transparent",
+          shadowColor: "#000",
+          shadowOffset: {
+            width: 0,
+            height: -5,
+          },
+          shadowOpacity: 0.05,
+          shadowRadius: 15,
+        },
       }}
-    />
-    <Tab.Screen
-      name="LoginStack"
-      component={LoginStack}
-      options={{
-        tabBarLabel: "Login",
-        tabBarIcon: ({ focused, color, size }) => (
-          <Icon
-            name={focused ? "account-circle" : "account-circle-outline"}
-            size={focused ? size + 5 : size}
-            color={color}
-          />
-        ),
-      }}
-    />
-  </Tab.Navigator>
-);
+    >
+      <Tab.Screen
+        name="Home"
+        component={Home}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon
+              name={focused ? "home-variant" : "home-variant-outline"}
+              size={focused ? size + 5 : size}
+              color={color}
+            />
+          ),
+        }}
+      />
+      {isAuth ? (
+        <Tab.Screen
+          name="Bookmarks"
+          component={Bookmarks}
+          options={{
+            tabBarLabel: "Bookmarks",
+            tabBarIcon: ({ focused, color, size }) => (
+              <Icon
+                name={focused ? "bookmark" : "bookmark-outline"}
+                size={focused ? size + 5 : size}
+                color={color}
+              />
+            ),
+          }}
+        />
+      ) : (
+        <Tab.Screen
+          name="LoginStack"
+          component={LoginStack}
+          options={{
+            tabBarLabel: "Login",
+            tabBarIcon: ({ focused, color, size }) => (
+              <Icon
+                name={focused ? "account-circle" : "account-circle-outline"}
+                size={focused ? size + 5 : size}
+                color={color}
+              />
+            ),
+          }}
+        />
+      )}
+    </Tab.Navigator>
+  );
+};
 
 const DrawerNavigator = () => {
   return (
