@@ -1,8 +1,9 @@
 import { createServer, Response } from "miragejs";
-import { nanoid } from "@reduxjs/toolkit";
 import clc from "cli-color";
 
 import data from "./mock-data";
+
+const TOKEN = "5g_8_gL_5HDv8jnS8bcuq";
 
 export function makeServer({ environment = "test" } = {}) {
   console.log(clc.bgMagentaBright("🚀 ~ Development Server running..."));
@@ -21,7 +22,7 @@ export function makeServer({ environment = "test" } = {}) {
       this.pretender.handledRequest = (_, __, request) => logger(request);
 
       this.get("/get-news-data", (schema) => {
-        return { data: schema.db.data };
+        return { data: schema.db.data[1].articles };
       });
 
       this.post("/reset-password", () => {
@@ -36,11 +37,8 @@ export function makeServer({ environment = "test" } = {}) {
             200,
             { "Content-Type": "application/json" },
             {
-              token: nanoid(),
-              userId: nanoid(),
-              userName: "Test User",
-              favorites: schema.db.data.slice(4, 8),
-              randomNameCreated: false,
+              token: TOKEN,
+              ...schema.db.data[0],
             }
           );
         }
@@ -60,6 +58,29 @@ export function makeServer({ environment = "test" } = {}) {
           500,
           { "Content-Type": "application/json" },
           { general: "Signup not available on Dev Mode" }
+        );
+      });
+
+      this.get("/get-user-data", (schema, request) => {
+        const token = request.requestHeaders.authorization.split(" ")[1];
+
+        if (token === TOKEN) {
+          return new Response(
+            200,
+            { "Content-Type": "application/json" },
+            {
+              ...schema.db.data[0],
+            }
+          );
+        }
+
+        return new Response(
+          403,
+          { "Content-Type": "application/json" },
+          {
+            status: "FETCH_ERROR",
+            error: "Invalid token",
+          }
         );
       });
 

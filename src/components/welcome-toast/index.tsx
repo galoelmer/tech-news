@@ -3,7 +3,7 @@ import { View, StyleSheet } from "react-native";
 import { Snackbar } from "react-native-paper";
 
 import useAuth from "hooks/useAuth";
-
+// TODO: display toast only once per session (not on every refresh)
 const WelcomeToast = () => {
   const { isAuth } = useAuth();
   const [visible, setVisible] = useState(false);

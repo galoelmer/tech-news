@@ -1,6 +1,10 @@
-import { View, ActivityIndicator } from "react-native";
+import { View, ActivityIndicator, Button } from "react-native";
 import StyleSheet from "react-native-media-query";
 import { useMediaQuery } from "react-responsive";
+import * as SecureStore from "expo-secure-store";
+import { useDispatch } from "react-redux";
+
+import { logoutUser } from "@/context/reducers/auth-reducer";
 
 import ScrollViewWithButton from "components/scrollview-with-button";
 import SafeAreaView from "components/safe-area-view";
@@ -15,6 +19,7 @@ const Home = () => {
   // TODO: handle error
   // TODO: add skeleton loading
   const { data, error, isLoading } = useGetNewsDataQuery();
+  const dispatch = useDispatch();
   const isDesktop = useMediaQuery({ query: "(min-width: 1020px)" });
   const isSmallTablet = useMediaQuery({ query: "(min-width: 425px )" });
   const isLargeTablet = useMediaQuery({ query: "(min-width: 760px)" });
@@ -55,6 +60,14 @@ const Home = () => {
               />
             ))}
           </View>
+          {/* TEMPORARY BUTTON FOR LOGOUT */}
+          <Button
+            title="Logout"
+            onPress={() => {
+              SecureStore.deleteItemAsync("token");
+              dispatch(logoutUser());
+            }}
+          />
         </>
       </ScrollViewWithButton>
     </SafeAreaView>

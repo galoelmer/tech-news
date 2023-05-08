@@ -1,13 +1,16 @@
-import { Provider as PaperProvider } from "react-native-paper";
-import { Provider as ReduxProvider } from "react-redux";
 import { useFonts } from "expo-font";
 
 import Navigation from "@/navigation";
 import BackgroundContainer from "components/gradient-background";
 
-import { store } from "context/store";
+import { useGetUserDataQuery } from "services/api";
 
 export default function App() {
+  useGetUserDataQuery(undefined, {
+    pollingInterval: 900000,
+    refetchOnMountOrArgChange: true,
+  });
+
   const [fontsLoaded] = useFonts({
     Roboto: require("assets/fonts/Roboto-Regular.ttf"),
   });
@@ -17,12 +20,8 @@ export default function App() {
   }
 
   return (
-    <ReduxProvider store={store}>
-      <PaperProvider>
-        <BackgroundContainer>
-          <Navigation />
-        </BackgroundContainer>
-      </PaperProvider>
-    </ReduxProvider>
+    <BackgroundContainer>
+      <Navigation />
+    </BackgroundContainer>
   );
 }

@@ -17,3 +17,14 @@ export interface InitialState {
   maxLimit: boolean;
   offset: number;
 }
+
+export interface UserInfo {
+  userId: string;
+  userName?: string;
+  favorites: string[] | number[];
+}
+
+export interface AuthState {
+  isAuth: boolean;
+  userInfo: UserInfo;
+}

@@ -1,45 +1,56 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 import { api } from "services/api";
-import { Article } from "../types";
 
-type AuthState = {
-  token: string | null;
-  isAuth: boolean;
-  useName: string;
-  userId: string;
-  favorites: Article[];
-  randomNameCreated: boolean;
-};
+import { AuthState } from "../types";
 
 const initialState: AuthState = {
-  token: null,
   isAuth: false,
-  useName: "",
-  userId: "",
-  favorites: [],
-  randomNameCreated: false,
+  userInfo: {
+    userId: "",
+    userName: undefined,
+    favorites: [],
+  },
 };
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {},
+  reducers: {
+    logoutUser: (state) => {
+      state.isAuth = false;
+      state.userInfo = {
+        userId: "",
+        userName: undefined,
+        favorites: [],
+      };
+    },
+  },
   extraReducers: (builder) => {
-    builder.addMatcher(
-      api.endpoints.loginUser.matchFulfilled,
-      (state, { payload }) => {
-        state.token = payload.token;
-        state.isAuth = true;
-        state.userId = payload.userId;
-        state.useName = payload.userName;
-        state.favorites = payload.favorites;
-        state.randomNameCreated = payload.randomNameCreated;
-      }
-    );
+    builder
+      .addMatcher(
+        api.endpoints.loginUser.matchFulfilled,
+        (state, { payload }) => {
+          state.isAuth = true;
+          state.userInfo.userName = payload.userName;
+          state.userInfo.userId = payload.userId;
+          state.userInfo.favorites = payload.favorites;
+        }
+      )
+      .addMatcher(
+        api.endpoints.getUserData.matchFulfilled,
+        (state, { payload }) => {
+          state.isAuth = true;
+          state.userInfo.userId = payload.userId;
+          state.userInfo.userName = payload.userName;
+          state.userInfo.favorites = payload.favorites;
+        }
+      );
   },
 });
 
 export default authSlice.reducer;
+
+export const { logoutUser } = authSlice.actions;
 
 export const selectCurrentUser = (state: { auth: AuthState }) => state.auth;
