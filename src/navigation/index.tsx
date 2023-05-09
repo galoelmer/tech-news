@@ -1,4 +1,7 @@
-import { NavigationContainer } from "@react-navigation/native";
+import {
+  NavigationContainer,
+  useNavigationContainerRef,
+} from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
@@ -8,6 +11,7 @@ import {
 } from "@react-navigation/drawer";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useMediaQuery } from "react-responsive";
+import { useFlipper } from "@react-navigation/devtools";
 
 import Home from "screens/home";
 import Login from "screens/login";
@@ -17,6 +21,7 @@ import NewsDetails from "screens/news-details";
 import ResetPassword from "@/screens/reset-password";
 
 import Logo from "components/logo";
+import BottomTabBar from "@/components/bottom-tab-bar";
 import BackgroundGradient from "components/gradient-background";
 
 import useAuth from "@/hooks/useAuth";
@@ -80,6 +85,7 @@ const TabNavigator = () => {
   return (
     <Tab.Navigator
       initialRouteName="Home"
+      tabBar={(props) => <BottomTabBar {...props} />}
       screenOptions={{
         headerTitle: () => <Logo />,
         headerBackground: () => (
@@ -89,26 +95,6 @@ const TabNavigator = () => {
             end={{ x: 0.8, y: 0.1 }}
           />
         ),
-        tabBarActiveTintColor: "#fff",
-        tabBarInactiveTintColor: "#a6bedb",
-        tabBarLabelStyle: {
-          fontSize: 12,
-          fontFamily: "Roboto",
-          fontWeight: "bold",
-          textTransform: "uppercase",
-          letterSpacing: 2,
-        },
-        tabBarStyle: {
-          backgroundColor: "#4777B1",
-          borderTopColor: "transparent",
-          shadowColor: "#000",
-          shadowOffset: {
-            width: 0,
-            height: -5,
-          },
-          shadowOpacity: 0.05,
-          shadowRadius: 15,
-        },
       }}
     >
       <Tab.Screen
@@ -119,7 +105,7 @@ const TabNavigator = () => {
           tabBarIcon: ({ focused, color, size }) => (
             <Icon
               name={focused ? "home-variant" : "home-variant-outline"}
-              size={focused ? size + 5 : size}
+              size={size}
               color={color}
             />
           ),
@@ -134,7 +120,7 @@ const TabNavigator = () => {
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
                 name={focused ? "bookmark" : "bookmark-outline"}
-                size={focused ? size + 5 : size}
+                size={size}
                 color={color}
               />
             ),
@@ -145,11 +131,11 @@ const TabNavigator = () => {
           name="LoginStack"
           component={LoginStack}
           options={{
-            tabBarLabel: "Login",
+            tabBarLabel: "Login / Signup",
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
                 name={focused ? "account-circle" : "account-circle-outline"}
-                size={focused ? size + 5 : size}
+                size={size}
                 color={color}
               />
             ),
@@ -186,10 +172,12 @@ const DrawerNavigator = () => {
 };
 
 export default function Navigation() {
+  const navigationRef = useNavigationContainerRef();
   const isTablet = useMediaQuery({ query: "(min-width: 500px)" });
+  useFlipper(navigationRef);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator
         initialRouteName="TabNavigator"
         screenOptions={{ headerShown: false }}
