@@ -10,6 +10,9 @@ export type RootStackParamList = {
   NewsFeed: undefined;
   Home: undefined;
   Account: NavigatorScreenParams<AccountTabsParamList>;
+  Settings: undefined;
+  AccountInfo: undefined;
+  Appearance: undefined;
   TabNavigator: undefined;
   Article: { id?: string };
   Bookmarks: undefined;
@@ -19,4 +22,9 @@ export type RootStackParamList = {
 export type NewsDetailsProps = NativeStackScreenProps<
   RootStackParamList,
   "Article"
+>;
+
+export type SettingsProps = NativeStackScreenProps<
+  RootStackParamList,
+  "Settings"
 >;

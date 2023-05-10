@@ -9,22 +9,28 @@ import {
   createDrawerNavigator,
   DrawerToggleButton,
 } from "@react-navigation/drawer";
+import { IconButton } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useMediaQuery } from "react-responsive";
 import { useFlipper } from "@react-navigation/devtools";
 
-import Home from "screens/home";
-import Login from "screens/login";
-import SignUp from "@/screens/signup";
-import Bookmarks from "@/screens/bookmarks";
-import NewsDetails from "screens/news-details";
-import ResetPassword from "@/screens/reset-password";
-
-import Logo from "components/logo";
-import BottomTabBar from "@/components/bottom-tab-bar";
-import BackgroundGradient from "components/gradient-background";
-
 import useAuth from "@/hooks/useAuth";
+
+import Home from "@/screens/home";
+import Login from "@/screens/login";
+import Search from "@/screens/search";
+import SignUp from "@/screens/signup";
+import Settings from "@/screens/settings";
+import Bookmarks from "@/screens/bookmarks";
+import NewsDetails from "@/screens/news-details";
+import ResetPassword from "@/screens/reset-password";
+import Appearance from "@/screens/settings/appearance";
+import AccountInfo from "@/screens/settings/account-info";
+
+import Logo from "@/components/logo";
+import BottomTabBar from "@/components/bottom-tab-bar";
+import BackgroundGradient from "@/components/gradient-background";
+
 import { RootStackParamList } from "./types";
 
 const Tab = createBottomTabNavigator();
@@ -80,6 +86,38 @@ const LoginStack = () => {
   );
 };
 
+const SettingsStack = () => {
+  return (
+    <Stack.Navigator
+      initialRouteName="Settings"
+      screenOptions={({ navigation }) => ({
+        animation: "simple_push",
+        headerShadowVisible: false,
+        headerStyle: { backgroundColor: "#F1F0F6" },
+        contentStyle: { backgroundColor: "#fff" },
+        headerTitle: "",
+        headerLeft: () => (
+          <IconButton
+            icon="arrow-left-thick"
+            onPress={() => navigation.goBack()}
+            style={{ marginLeft: -10 }}
+          />
+        ),
+      })}
+    >
+      <Stack.Screen
+        name="Settings"
+        component={Settings}
+        options={{
+          headerLeft: undefined,
+        }}
+      />
+      <Stack.Screen name="AccountInfo" component={AccountInfo} />
+      <Stack.Screen name="Appearance" component={Appearance} />
+    </Stack.Navigator>
+  );
+};
+
 const TabNavigator = () => {
   const { isAuth } = useAuth();
   return (
@@ -111,6 +149,20 @@ const TabNavigator = () => {
           ),
         }}
       />
+      <Tab.Screen
+        name="Search"
+        component={Search}
+        options={{
+          tabBarLabel: "Search",
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon
+              name={focused ? "text-box-search" : "text-box-search-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
       {isAuth ? (
         <Tab.Screen
           name="Bookmarks"
@@ -134,7 +186,7 @@ const TabNavigator = () => {
             tabBarLabel: "Login / Signup",
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
-                name={focused ? "account-circle" : "account-circle-outline"}
+                name={focused ? "account" : "account-outline"}
                 size={size}
                 color={color}
               />
@@ -142,6 +194,20 @@ const TabNavigator = () => {
           }}
         />
       )}
+      <Tab.Screen
+        name="SettingsStack"
+        component={SettingsStack}
+        options={{
+          tabBarLabel: "Settings",
+          tabBarIcon: ({ focused, color, size }) => (
+            <Icon
+              name={focused ? "cog" : "cog-outline"}
+              size={size}
+              color={color}
+            />
+          ),
+        }}
+      />
     </Tab.Navigator>
   );
 };
