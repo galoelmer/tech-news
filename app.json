@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Tech News",
-    "slug": "tech-news-app",
+    "slug": "tech-news",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,17 +9,19 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#ffffff"
+      "backgroundColor": "#4A75AA"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.galoelmer.technewsapp"
+      "bundleIdentifier": "com.galoelmer.technews"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
+        "backgroundColor": "#4A75AA"
       }
     },
     "web": {
@@ -27,7 +29,7 @@
     },
     "extra": {
       "eas": {
-        "projectId": "9fe7c6cb-f891-4a4f-b125-4b6cc70e92fb"
+        "projectId": "003af8ba-7f70-480b-9022-727af90243ff"
       }
     },
     "plugins": [

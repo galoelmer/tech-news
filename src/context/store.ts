@@ -3,6 +3,8 @@ import { setupListeners } from "@reduxjs/toolkit/query";
 
 import { api } from "services/api";
 import authReducer from "./reducers/auth-reducer";
+import newsReducer from "./reducers/news-reducer";
+import uiReducer from "./reducers/ui-reducer";
 
 const middlewares = [api.middleware];
 
@@ -13,7 +15,9 @@ if (__DEV__) {
 
 export const store = configureStore({
   reducer: {
+    ui: uiReducer,
     auth: authReducer,
+    news: newsReducer,
     [api.reducerPath]: api.reducer,
   },
   middleware: (getDefaultMiddleware) =>

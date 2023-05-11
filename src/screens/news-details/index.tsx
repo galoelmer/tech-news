@@ -1,12 +1,16 @@
+import { useEffect } from "react";
 import { View, ActivityIndicator, Image } from "react-native";
 import { Text, Badge } from "react-native-paper";
 
 import { useGetNewsDataQuery } from "services/api";
 import formatDate from "utils/formatDate";
+import { useAppDispatch } from "hooks/useRedux";
+import { setFocusArticlesUrl } from "@/context/reducers/news-reducer";
 
-import SafeAreaView from "components/safe-area-view";
-import ScrollViewWithButton from "components/scrollview-with-button";
 import NewBodyText from "./news-body-text";
+import withDialog from "@/components/dialog";
+import SafeAreaView from "@/components/safe-area-view";
+import ScrollViewWithButton from "@/components/scrollview-with-button";
 
 import styles, { ids } from "./styles";
 import { NewsDetailsProps } from "navigation/types";
@@ -30,9 +34,20 @@ const PostCreators = ({ creators }: PostCreatorsProps) => {
   );
 };
 
-const NewsDetails = ({ route }: NewsDetailsProps) => {
+const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
+  const dispatch = useAppDispatch();
   const { id } = route.params;
   const { data, isLoading } = useGetNewsDataQuery();
+
+  const news = data?.find((item) => item.id === id);
+
+  useEffect(() => {
+    dispatch(setFocusArticlesUrl(news?.link ?? ""));
+    const removeListener = navigation.addListener("beforeRemove", () =>
+      dispatch(setFocusArticlesUrl(""))
+    );
+    return removeListener;
+  }, []);
 
   if (isLoading) {
     return (
@@ -41,8 +56,6 @@ const NewsDetails = ({ route }: NewsDetailsProps) => {
       </View>
     );
   }
-
-  const news = data?.find((item) => item.id === id);
 
   return (
     <SafeAreaView>
@@ -76,4 +89,4 @@ const NewsDetails = ({ route }: NewsDetailsProps) => {
   );
 };
 
-export default NewsDetails;
+export default withDialog(NewsDetails);

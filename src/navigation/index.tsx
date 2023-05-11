@@ -13,8 +13,11 @@ import { IconButton } from "react-native-paper";
 import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useMediaQuery } from "react-responsive";
 import { useFlipper } from "@react-navigation/devtools";
+import * as WebBrowser from "expo-web-browser";
 
+import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
 import useAuth from "@/hooks/useAuth";
+import { openDialog } from "@/context/reducers/ui-reducer";
 
 import Home from "@/screens/home";
 import Login from "@/screens/login";
@@ -240,6 +243,11 @@ const DrawerNavigator = () => {
 export default function Navigation() {
   const navigationRef = useNavigationContainerRef();
   const isTablet = useMediaQuery({ query: "(min-width: 500px)" });
+  const focusArticleUrl = useAppSelector(
+    (state) => state.news.focusArticlesUrl
+  );
+  const dispatch = useAppDispatch();
+  const { isAuth } = useAuth();
   useFlipper(navigationRef);
 
   return (
@@ -267,18 +275,42 @@ export default function Navigation() {
             headerLeft: () => (
               <Icon
                 onPress={navigation.goBack}
-                name="arrow-left-thick"
+                name="close-thick"
                 size={30}
                 color="#eef3fb"
               />
             ),
             headerRight: () => (
-              <Icon
-                onPress={() => {}}
-                name="bookmark-outline"
-                size={30}
-                color="#eef3fb"
-              />
+              <>
+                <Icon
+                  onPress={async () => {
+                    await WebBrowser.openBrowserAsync(focusArticleUrl ?? "");
+                  }}
+                  name="arrow-top-right-bold-box-outline"
+                  size={30}
+                  color="#eef3fb"
+                  style={{ marginRight: 20 }}
+                />
+                <Icon
+                  onPress={() => {
+                    if (!isAuth) {
+                      dispatch(
+                        openDialog({
+                          isOpen: true,
+                          title: "Login Required",
+                          action: {
+                            label: "Login",
+                            screen: "LoginStack",
+                          },
+                        })
+                      );
+                    }
+                  }}
+                  name="bookmark-outline"
+                  size={30}
+                  color="#eef3fb"
+                />
+              </>
             ),
           })}
         />

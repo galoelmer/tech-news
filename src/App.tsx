@@ -1,9 +1,9 @@
 import { useFonts } from "expo-font";
 
 import Navigation from "@/navigation";
-import BackgroundContainer from "components/gradient-background";
+import BackgroundContainer from "@/components/gradient-background";
 
-import { useGetUserDataQuery } from "services/api";
+import { useGetUserDataQuery } from "@/services/api";
 
 export default function App() {
   useGetUserDataQuery(undefined, {

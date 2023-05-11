@@ -1,3 +1,5 @@
+import type { RootStackParamList } from "@/navigation/types";
+
 export interface Article {
   id: string;
   title: string;
@@ -11,11 +13,8 @@ export interface Article {
   creator: string[] | null;
 }
 
-export interface InitialState {
-  articles: Article[];
-  loading: boolean;
-  maxLimit: boolean;
-  offset: number;
+export interface NewsState {
+  focusArticleUrl: string | null;
 }
 
 export interface UserInfo {
@@ -27,4 +26,20 @@ export interface UserInfo {
 export interface AuthState {
   isAuth: boolean;
   userInfo: UserInfo;
+}
+
+export interface DialogState {
+  isOpen: boolean;
+  title: string;
+  content?: string;
+  action?:
+    | {
+        label?: string;
+        screen?: keyof RootStackParamList;
+      }
+    | undefined;
+}
+
+export interface UiState {
+  dialog: DialogState;
 }

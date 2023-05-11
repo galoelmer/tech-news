@@ -1,22 +1,24 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-// import type { PayloadAction } from "@reduxjs/toolkit";
-// import type { RootState } from "../store";
-import { InitialState } from "../types";
+import { NewsState } from "../types";
 
-const initialState: InitialState = {
-  articles: [],
-  loading: false,
-  maxLimit: false,
-  offset: 0,
+const initialState: NewsState = {
+  focusArticleUrl: null,
 };
 
 export const newsSlice = createSlice({
   name: "news",
   initialState,
-  reducers: {},
+  reducers: {
+    setFocusArticleUrl: (state, action) => {
+      state.focusArticleUrl = action.payload;
+    },
+  },
 });
 
-export const {} = newsSlice.actions;
+export const { setFocusArticleUrl } = newsSlice.actions;
+
+export const selectFocusArticleUrl = (state: { news: NewsState }) =>
+  state.news.focusArticleUrl;
 
 export default newsSlice.reducer;
