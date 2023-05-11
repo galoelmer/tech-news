@@ -1,23 +1,33 @@
-import { View, ActivityIndicator } from "react-native";
-import StyleSheet from "react-native-media-query";
+import { useEffect } from "react";
 import { useMediaQuery } from "react-responsive";
+import StyleSheet from "react-native-media-query";
+import { View, ActivityIndicator } from "react-native";
+import { useBottomTabBarHeight } from "@react-navigation/bottom-tabs";
 
-import ScrollViewWithButton from "components/scrollview-with-button";
-import SafeAreaView from "components/safe-area-view";
-import ImageSlider from "components/image-slider";
+import Card from "@/components/card";
 import FeatureNews from "./featureNews";
-import Card from "components/card";
+import ImageSlider from "@/components/image-slider";
+import SafeAreaView from "@/components/safe-area-view";
+import ScrollViewWithButton from "@/components/scrollview-with-button";
 
-import { useGetNewsDataQuery } from "services/api";
-import { tablet } from "utils/mediaQueries";
+import { tablet } from "@/utils/mediaQueries";
+import { useAppDispatch } from "@/hooks/useRedux";
+import { useGetNewsDataQuery } from "@/services/api";
+import { setButtonTabBarHeight } from "@/context/reducers/ui-reducer";
 
 const Home = () => {
   // TODO: handle error
   // TODO: add skeleton loading
-  const { data, error, isLoading } = useGetNewsDataQuery();
+  const dispatch = useAppDispatch();
+  const { data, isLoading } = useGetNewsDataQuery();
   const isDesktop = useMediaQuery({ query: "(min-width: 1020px)" });
   const isSmallTablet = useMediaQuery({ query: "(min-width: 425px )" });
   const isLargeTablet = useMediaQuery({ query: "(min-width: 760px)" });
+  const tabBarHeight = useBottomTabBarHeight();
+
+  useEffect(() => {
+    dispatch(setButtonTabBarHeight(tabBarHeight));
+  }, [tabBarHeight]);
 
   if (isLoading) {
     return (

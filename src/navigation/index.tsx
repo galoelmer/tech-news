@@ -243,9 +243,7 @@ const DrawerNavigator = () => {
 export default function Navigation() {
   const navigationRef = useNavigationContainerRef();
   const isTablet = useMediaQuery({ query: "(min-width: 500px)" });
-  const focusArticleUrl = useAppSelector(
-    (state) => state.news.focusArticlesUrl
-  );
+  const focusArticleUrl = useAppSelector((state) => state.news.focusArticleUrl);
   const dispatch = useAppDispatch();
   const { isAuth } = useAuth();
   useFlipper(navigationRef);

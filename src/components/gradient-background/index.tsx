@@ -1,8 +1,6 @@
 import { View, StyleSheet } from "react-native";
 import { LinearGradient, LinearGradientProps } from "expo-linear-gradient";
 
-import WelcomeToast from "components/welcome-toast";
-
 interface GradientBackgroundProps extends Partial<LinearGradientProps> {}
 
 const GradientBackground = ({
@@ -18,10 +16,7 @@ const GradientBackground = ({
       end={end}
       style={styles.gradient}
     />
-    <>
-      {children}
-      <WelcomeToast />
-    </>
+    <>{children}</>
   </View>
 );
 

@@ -40,6 +40,13 @@ export interface DialogState {
     | undefined;
 }
 
+export interface SnackbarState {
+  isOpen: boolean;
+  message: string;
+}
+
 export interface UiState {
   dialog: DialogState;
+  snackbar: SnackbarState;
+  tabBarHeight: number | null;
 }

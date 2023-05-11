@@ -5,7 +5,7 @@ import { Text, Badge } from "react-native-paper";
 import { useGetNewsDataQuery } from "services/api";
 import formatDate from "utils/formatDate";
 import { useAppDispatch } from "hooks/useRedux";
-import { setFocusArticlesUrl } from "@/context/reducers/news-reducer";
+import { setFocusArticleUrl } from "@/context/reducers/news-reducer";
 
 import NewBodyText from "./news-body-text";
 import withDialog from "@/components/dialog";
@@ -42,9 +42,9 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
   const news = data?.find((item) => item.id === id);
 
   useEffect(() => {
-    dispatch(setFocusArticlesUrl(news?.link ?? ""));
+    dispatch(setFocusArticleUrl(news?.link ?? ""));
     const removeListener = navigation.addListener("beforeRemove", () =>
-      dispatch(setFocusArticlesUrl(""))
+      dispatch(setFocusArticleUrl(""))
     );
     return removeListener;
   }, []);

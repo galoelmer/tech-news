@@ -2,6 +2,7 @@ import { useFonts } from "expo-font";
 
 import Navigation from "@/navigation";
 import BackgroundContainer from "@/components/gradient-background";
+import Toast from "@/components/toast";
 
 import { useGetUserDataQuery } from "@/services/api";
 
@@ -23,6 +24,7 @@ export default function App() {
   return (
     <BackgroundContainer>
       <Navigation />
+      <Toast />
     </BackgroundContainer>
   );
 }

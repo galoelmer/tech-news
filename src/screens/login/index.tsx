@@ -5,9 +5,11 @@ import { Button, TextInput, HelperText } from "react-native-paper";
 import { Formik, FormikHelpers } from "formik";
 import * as yup from "yup";
 
+import { useAppDispatch } from "@/hooks/useRedux";
+import useNavigation from "@/hooks/useNavigation";
 import { useLoginUserMutation } from "@/services/api";
 import { isFetchBaseQueryError } from "@/services/helpers";
-import useNavigation from "@/hooks/useNavigation";
+import { openSnackbar } from "@/context/reducers/ui-reducer";
 // import useAuth from "@/hooks/useAuth";
 
 import styles from "./styles";
@@ -24,6 +26,7 @@ let LoginSchema = yup.object().shape({
 const LoginForm = () => {
   // TODO: add redirect if user is already logged in
   // const { isAuth } = useAuth();
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   const [loginUser] = useLoginUserMutation();
   const [showPassword, setShowPassword] = useState(false);
@@ -32,6 +35,7 @@ const LoginForm = () => {
     async (values: InitialValues, helpers: FormikHelpers<InitialValues>) => {
       try {
         await loginUser(values).unwrap();
+        dispatch(openSnackbar("Welcome Back!"));
         navigate("Home");
       } catch (err) {
         if (isFetchBaseQueryError(err)) {
