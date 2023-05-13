@@ -11,21 +11,20 @@ export interface Article {
   image_url: string;
   keywords: string[] | null;
   creator: string[] | null;
+  isBookmarked?: boolean;
 }
 
 export interface NewsState {
-  focusArticleUrl: string | null;
-}
-
-export interface UserInfo {
-  userId: string;
-  userName?: string;
-  favorites: string[] | number[];
+  focusArticle: {
+    id: string | null;
+    url: string | null;
+    article: Article | null;
+    isBookmarked: boolean;
+  };
 }
 
 export interface AuthState {
   isAuth: boolean;
-  userInfo: UserInfo;
 }
 
 export interface DialogState {

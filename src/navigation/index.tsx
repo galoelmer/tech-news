@@ -10,14 +10,11 @@ import {
   DrawerToggleButton,
 } from "@react-navigation/drawer";
 import { IconButton } from "react-native-paper";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 import { useMediaQuery } from "react-responsive";
 import { useFlipper } from "@react-navigation/devtools";
-import * as WebBrowser from "expo-web-browser";
+import Icon from "@expo/vector-icons/MaterialCommunityIcons";
 
-import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
 import useAuth from "@/hooks/useAuth";
-import { openDialog } from "@/context/reducers/ui-reducer";
 
 import Home from "@/screens/home";
 import Login from "@/screens/login";
@@ -33,6 +30,7 @@ import AccountInfo from "@/screens/settings/account-info";
 import Logo from "@/components/logo";
 import BottomTabBar from "@/components/bottom-tab-bar";
 import BackgroundGradient from "@/components/gradient-background";
+import ArticleHeaderRightButton from "@/navigation/article-header-right-button";
 
 import { RootStackParamList } from "./types";
 
@@ -242,11 +240,9 @@ const DrawerNavigator = () => {
 
 export default function Navigation() {
   const navigationRef = useNavigationContainerRef();
-  const isTablet = useMediaQuery({ query: "(min-width: 500px)" });
-  const focusArticleUrl = useAppSelector((state) => state.news.focusArticleUrl);
-  const dispatch = useAppDispatch();
-  const { isAuth } = useAuth();
   useFlipper(navigationRef);
+
+  const isTablet = useMediaQuery({ query: "(min-width: 500px)" });
 
   return (
     <NavigationContainer ref={navigationRef}>
@@ -278,38 +274,7 @@ export default function Navigation() {
                 color="#eef3fb"
               />
             ),
-            headerRight: () => (
-              <>
-                <Icon
-                  onPress={async () => {
-                    await WebBrowser.openBrowserAsync(focusArticleUrl ?? "");
-                  }}
-                  name="arrow-top-right-bold-box-outline"
-                  size={30}
-                  color="#eef3fb"
-                  style={{ marginRight: 20 }}
-                />
-                <Icon
-                  onPress={() => {
-                    if (!isAuth) {
-                      dispatch(
-                        openDialog({
-                          isOpen: true,
-                          title: "Login Required",
-                          action: {
-                            label: "Login",
-                            screen: "LoginStack",
-                          },
-                        })
-                      );
-                    }
-                  }}
-                  name="bookmark-outline"
-                  size={30}
-                  color="#eef3fb"
-                />
-              </>
-            ),
+            headerRight: () => <ArticleHeaderRightButton />,
           })}
         />
         <Stack.Screen

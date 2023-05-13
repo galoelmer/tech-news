@@ -3,7 +3,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import { NewsState } from "../types";
 
 const initialState: NewsState = {
-  focusArticleUrl: null,
+  focusArticle: {
+    id: null,
+    url: null,
+    article: null,
+    isBookmarked: false,
+  },
 };
 
 export const newsSlice = createSlice({
@@ -11,7 +16,7 @@ export const newsSlice = createSlice({
   initialState,
   reducers: {
     setFocusArticleUrl: (state, action) => {
-      state.focusArticleUrl = action.payload;
+      state.focusArticle = action.payload;
     },
   },
 });
@@ -19,6 +24,6 @@ export const newsSlice = createSlice({
 export const { setFocusArticleUrl } = newsSlice.actions;
 
 export const selectFocusArticleUrl = (state: { news: NewsState }) =>
-  state.news.focusArticleUrl;
+  state.news.focusArticle;
 
 export default newsSlice.reducer;

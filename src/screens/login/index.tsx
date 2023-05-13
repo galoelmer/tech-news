@@ -10,7 +10,6 @@ import useNavigation from "@/hooks/useNavigation";
 import { useLoginUserMutation } from "@/services/api";
 import { isFetchBaseQueryError } from "@/services/helpers";
 import { openSnackbar } from "@/context/reducers/ui-reducer";
-// import useAuth from "@/hooks/useAuth";
 
 import styles from "./styles";
 import type { InitialValues } from "./types";
@@ -25,7 +24,6 @@ let LoginSchema = yup.object().shape({
 
 const LoginForm = () => {
   // TODO: add redirect if user is already logged in
-  // const { isAuth } = useAuth();
   const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   const [loginUser] = useLoginUserMutation();

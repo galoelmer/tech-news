@@ -1,13 +1,13 @@
 import { useFonts } from "expo-font";
+import { ActivityIndicator, View } from "react-native";
 
 import Navigation from "@/navigation";
 import BackgroundContainer from "@/components/gradient-background";
-import Toast from "@/components/toast";
 
 import { useGetUserDataQuery } from "@/services/api";
 
 export default function App() {
-  useGetUserDataQuery(undefined, {
+  const { isLoading } = useGetUserDataQuery(undefined, {
     pollingInterval: 900000,
     refetchOnMountOrArgChange: true,
   });
@@ -21,10 +21,17 @@ export default function App() {
     return null;
   }
 
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
   return (
     <BackgroundContainer>
       <Navigation />
-      <Toast />
     </BackgroundContainer>
   );
 }

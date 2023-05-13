@@ -22,7 +22,7 @@ const withDialog =
     const handleCallback = () => {
       if (action?.screen) {
         hideDialog();
-        navigate(action.screen);
+        navigate(action.screen); // TODO: fix this type error
       }
     };
 

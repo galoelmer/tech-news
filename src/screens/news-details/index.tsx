@@ -7,6 +7,7 @@ import formatDate from "utils/formatDate";
 import { useAppDispatch } from "hooks/useRedux";
 import { setFocusArticleUrl } from "@/context/reducers/news-reducer";
 
+import Toast from "@/components/toast";
 import NewBodyText from "./news-body-text";
 import withDialog from "@/components/dialog";
 import SafeAreaView from "@/components/safe-area-view";
@@ -39,15 +40,29 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
   const { id } = route.params;
   const { data, isLoading } = useGetNewsDataQuery();
 
-  const news = data?.find((item) => item.id === id);
+  const article = data?.find((item) => item.id === id);
 
   useEffect(() => {
-    dispatch(setFocusArticleUrl(news?.link ?? ""));
+    dispatch(
+      setFocusArticleUrl({
+        url: article?.link ?? null,
+        id: article?.id ?? null,
+        article: article || null,
+        isBookmarked: article?.isBookmarked ?? false,
+      })
+    );
     const removeListener = navigation.addListener("beforeRemove", () =>
-      dispatch(setFocusArticleUrl(""))
+      dispatch(
+        setFocusArticleUrl({
+          url: null,
+          id: null,
+          article: null,
+          isBookmarked: false,
+        })
+      )
     );
     return removeListener;
-  }, []);
+  }, [article]);
 
   if (isLoading) {
     return (
@@ -58,34 +73,37 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
   }
 
   return (
-    <SafeAreaView>
-      <ScrollViewWithButton scrollviewStyles={{ marginHorizontal: 15 }}>
-        <View style={{ marginTop: 10 }}>
-          <Text
-            style={styles.title}
-            dataSet={{ media: ids.title }}
-            variant="titleLarge"
-          >
-            {news?.title}
-          </Text>
-          <View
-            style={styles.postDateWrapper}
-            dataSet={{ media: ids.postDateWrapper }}
-          >
-            <Text style={styles.postDate} variant="labelSmall">
-              {formatDate(news?.pubDate ?? "")}
+    <>
+      <SafeAreaView>
+        <ScrollViewWithButton scrollviewStyles={{ marginHorizontal: 15 }}>
+          <View style={{ marginTop: 10 }}>
+            <Text
+              style={styles.title}
+              dataSet={{ media: ids.title }}
+              variant="titleLarge"
+            >
+              {article?.title}
             </Text>
-            <PostCreators creators={news?.creator} />
+            <View
+              style={styles.postDateWrapper}
+              dataSet={{ media: ids.postDateWrapper }}
+            >
+              <Text style={styles.postDate} variant="labelSmall">
+                {formatDate(article?.pubDate ?? "")}
+              </Text>
+              <PostCreators creators={article?.creator} />
+            </View>
+            <Image
+              source={{ uri: article?.image_url }}
+              style={styles.image}
+              dataSet={{ media: ids.image }}
+            />
+            <NewBodyText text={article?.content ?? ""} />
           </View>
-          <Image
-            source={{ uri: news?.image_url }}
-            style={styles.image}
-            dataSet={{ media: ids.image }}
-          />
-          <NewBodyText text={news?.content ?? ""} />
-        </View>
-      </ScrollViewWithButton>
-    </SafeAreaView>
+        </ScrollViewWithButton>
+      </SafeAreaView>
+      <Toast />
+    </>
   );
 };
 
