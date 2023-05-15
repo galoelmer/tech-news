@@ -1,24 +1,24 @@
-import * as Linking from "expo-linking";
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 import {
-  NavigationContainer,
   Link,
   LinkingOptions,
-} from "@react-navigation/native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
-import { useMediaQuery } from "react-responsive";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+  NavigationContainer
+} from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import * as Linking from 'expo-linking';
+import { useMediaQuery } from 'react-responsive';
 
-import Home from "@/screens/home";
-import NewsDetails from "@/screens/news-details";
-import Login from "@/screens/login";
-import Register from "@/screens/signup";
-import Logo from "@/components/logo";
-import GradientBackground from "@/components/gradient-background";
-import HeaderRightButton from "./header-right-buttons";
+import HeaderRightButton from './header-right-buttons';
+import { RootStackParamList } from './types';
 
-import { RootStackParamList } from "./types";
+import GradientBackground from '@/components/gradient-background';
+import Logo from '@/components/logo';
+import Home from '@/screens/home';
+import Login from '@/screens/login';
+import NewsDetails from '@/screens/news-details';
+import Register from '@/screens/signup';
 
 const BottomTabs = createBottomTabNavigator();
 const TopTabs = createMaterialTopTabNavigator();
@@ -31,11 +31,11 @@ const HomeStackScreen = () => {
       screenOptions={{
         headerShown: false,
         contentStyle: {
-          backgroundColor: "transparent",
-          width: "100%",
+          backgroundColor: 'transparent',
+          width: '100%',
           maxWidth: 1200,
-          marginHorizontal: "auto",
-        },
+          marginHorizontal: 'auto'
+        }
       }}
     >
       <Stack.Screen name="Home" component={Home} />
@@ -54,27 +54,27 @@ const AccountTopTabs = () => {
 };
 
 const linking: LinkingOptions<RootStackParamList> = {
-  prefixes: [Linking.createURL("/")],
+  prefixes: [Linking.createURL('/')],
   config: {
     screens: {
       NewsFeed: {
         screens: {
-          Home: "",
-          Article: "article/:id",
-        },
+          Home: '',
+          Article: 'article/:id'
+        }
       },
       Account: {
         screens: {
-          Login: "login",
-          Signup: "signup",
-        },
-      },
-    },
-  },
+          Login: 'login',
+          Signup: 'signup'
+        }
+      }
+    }
+  }
 };
 
 export default function Navigation() {
-  const isMobile = useMediaQuery({ query: "(max-width: 500px)" });
+  const isMobile = useMediaQuery({ query: '(max-width: 500px)' });
 
   return (
     <NavigationContainer linking={linking}>
@@ -86,10 +86,10 @@ export default function Navigation() {
           headerTitle: () => (
             <Link
               to={{
-                screen: "NewsFeed",
+                screen: 'NewsFeed',
                 params: {
-                  screen: "Home",
-                },
+                  screen: 'Home'
+                }
               }}
             >
               <Logo resizeMode="contain" width={150} />
@@ -97,32 +97,32 @@ export default function Navigation() {
           ),
           headerBackground: () => (
             <GradientBackground
-              colors={["#4777B1", "#6173B4", "#746EB4"]}
+              colors={['#4777B1', '#6173B4', '#746EB4']}
               start={{ x: 0.2, y: 1 }}
               end={{ x: 0.8, y: 0.1 }}
             />
           ),
           headerRight: () => (isMobile ? null : <HeaderRightButton />),
-          tabBarActiveTintColor: "#fff",
-          tabBarInactiveTintColor: "#a6bedb",
-          tabBarLabelPosition: "beside-icon",
+          tabBarActiveTintColor: '#fff',
+          tabBarInactiveTintColor: '#a6bedb',
+          tabBarLabelPosition: 'beside-icon',
           tabBarLabelStyle: {
-            fontFamily: "Roboto",
-            fontWeight: "bold",
-            textTransform: "uppercase",
-            letterSpacing: 2,
+            fontFamily: 'Roboto',
+            fontWeight: 'bold',
+            textTransform: 'uppercase',
+            letterSpacing: 2
           },
           tabBarStyle: {
-            backgroundColor: "#4777B1",
-            borderTopColor: "transparent",
-            shadowColor: "#000",
+            backgroundColor: '#4777B1',
+            borderTopColor: 'transparent',
+            shadowColor: '#000',
             shadowOffset: {
               width: 0,
-              height: -5,
+              height: -5
             },
             shadowOpacity: 0.2,
-            shadowRadius: 15,
-          },
+            shadowRadius: 15
+          }
         }}
       >
         <BottomTabs.Screen
@@ -131,32 +131,32 @@ export default function Navigation() {
           listeners={({ navigation }) => ({
             tabPress: ({ preventDefault }) => {
               preventDefault();
-              navigation.navigate("NewsFeed", { screen: "Home" });
-            },
+              navigation.navigate('NewsFeed', { screen: 'Home' });
+            }
           })}
           options={{
-            tabBarLabel: "Home",
+            tabBarLabel: 'Home',
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
-                name={focused ? "home-variant" : "home-variant-outline"}
+                name={focused ? 'home-variant' : 'home-variant-outline'}
                 size={focused ? size + 5 : size}
                 color={color}
               />
-            ),
+            )
           }}
         />
         <BottomTabs.Screen
           name="Account"
           component={AccountTopTabs}
           options={{
-            tabBarLabel: "Login",
+            tabBarLabel: 'Login',
             tabBarIcon: ({ focused, color, size }) => (
               <Icon
-                name={focused ? "account-circle" : "account-circle-outline"}
+                name={focused ? 'account-circle' : 'account-circle-outline'}
                 size={focused ? size + 5 : size}
                 color={color}
               />
-            ),
+            )
           }}
         />
       </BottomTabs.Navigator>

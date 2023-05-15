@@ -1,5 +1,5 @@
-import { NavigatorScreenParams } from "@react-navigation/native";
-import type { NativeStackScreenProps } from "@react-navigation/native-stack";
+import { NavigatorScreenParams } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 export type AccountTabsParamList = {
   Login: undefined;
@@ -14,17 +14,17 @@ export type RootStackParamList = {
   AccountInfo: undefined;
   Appearance: undefined;
   TabNavigator: undefined;
-  Article: { id?: string };
+  Article: { id?: string; previousScreen?: string };
   Bookmarks: undefined;
   ResetPassword: undefined;
 };
 
 export type NewsDetailsProps = NativeStackScreenProps<
   RootStackParamList,
-  "Article"
+  'Article'
 >;
 
 export type SettingsProps = NativeStackScreenProps<
   RootStackParamList,
-  "Settings"
+  'Settings'
 >;

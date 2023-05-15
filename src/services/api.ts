@@ -1,59 +1,59 @@
-import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
-import * as SecureStore from "expo-secure-store";
+import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
+import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
+import type { Article } from 'context/types';
+import * as SecureStore from 'expo-secure-store';
 
-import type { FetchBaseQueryError } from "@reduxjs/toolkit/query";
-import type { Article } from "context/types";
-import type { AuthResponse, LoginRequest, AddBookmarkRequest } from "./types";
+import type { AddBookmarkRequest, AuthResponse, LoginRequest } from './types';
 
 export const api = createApi({
-  reducerPath: "api",
+  reducerPath: 'api',
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: '/api',
     prepareHeaders: async (headers, { endpoint }) => {
-      const token = await SecureStore.getItemAsync("token");
+      const token = await SecureStore.getItemAsync('token');
       // const { signupUser } = api.endpoints;
       // const shouldIncludeToken = ![signupUser.name].includes(endpoint);
       // if (shouldIncludeToken && token) {
       if (token) {
-        headers.set("authorization", `Bearer ${token}`);
+        headers.set('authorization', `Bearer ${token}`);
       }
       return headers;
-    },
+    }
   }),
   endpoints: (builder) => ({
     getNewsData: builder.query<Article[], void>({
-      query: () => "get-news-data",
-      transformResponse: (response: { data: Article[] }) => response.data,
+      query: () => 'get-news-data',
+      transformResponse: (response: { data: Article[] }) => response.data
     }),
-    getUserData: builder.query<{}, void>({
+    getUserData: builder.query<object, void>({
       queryFn: async (_arg, queryApi, _extraOptions, baseQuery) => {
-        const token = await SecureStore.getItemAsync("token");
+        const token = await SecureStore.getItemAsync('token');
         if (!token) {
           queryApi.abort();
         }
 
-        const result = await baseQuery("get-user-data");
+        const result = await baseQuery('get-user-data');
         return result.data
           ? { data: {} }
           : { error: result.error as FetchBaseQueryError };
-      },
+      }
     }),
     getUserBookmarks: builder.query<Article[], void>({
-      query: () => "get-user-bookmarks",
-      transformResponse: (response: { data: Article[] }) => response.data,
+      query: () => 'get-user-bookmarks',
+      transformResponse: (response: { data: Article[] }) => response.data
     }),
     addBookmark: builder.mutation<void, AddBookmarkRequest>({
       query: ({ articleId, article }) => ({
         url: `add-bookmark`,
-        method: "POST",
-        body: { articleId, article },
+        method: 'POST',
+        body: { articleId, article }
       }),
       async onQueryStarted(
         { articleId, article },
         { dispatch, queryFulfilled }
       ) {
         const patchNewsData = dispatch(
-          api.util.updateQueryData("getNewsData", undefined, (draft) => {
+          api.util.updateQueryData('getNewsData', undefined, (draft) => {
             const article = draft.find((article) => article.id === articleId);
             if (article) {
               article.isBookmarked = true;
@@ -61,7 +61,7 @@ export const api = createApi({
           })
         );
         const patchUserBookmark = dispatch(
-          api.util.updateQueryData("getUserBookmarks", undefined, (draft) => {
+          api.util.updateQueryData('getUserBookmarks', undefined, (draft) => {
             const updatedArticle = { ...article, isBookmarked: true };
             draft.push(updatedArticle);
           })
@@ -74,18 +74,18 @@ export const api = createApi({
           patchUserBookmark.undo();
         }
       },
-      transformErrorResponse: (response) => response.data,
+      transformErrorResponse: (response) => response.data
     }),
-    removeBookmark: builder.mutation<void, Omit<AddBookmarkRequest, "article">>(
+    removeBookmark: builder.mutation<void, Omit<AddBookmarkRequest, 'article'>>(
       {
         query: (body) => ({
           url: `remove-bookmark`,
-          method: "POST",
-          body,
+          method: 'POST',
+          body
         }),
         async onQueryStarted({ articleId }, { dispatch, queryFulfilled }) {
           const patchNewsData = dispatch(
-            api.util.updateQueryData("getNewsData", undefined, (draft) => {
+            api.util.updateQueryData('getNewsData', undefined, (draft) => {
               const article = draft.find((article) => article.id === articleId);
               if (article) {
                 article.isBookmarked = false;
@@ -93,7 +93,7 @@ export const api = createApi({
             })
           );
           const patchUserBookmark = dispatch(
-            api.util.updateQueryData("getUserBookmarks", undefined, (draft) => {
+            api.util.updateQueryData('getUserBookmarks', undefined, (draft) => {
               const index = draft.findIndex(
                 (article) => article.id === articleId
               );
@@ -110,27 +110,49 @@ export const api = createApi({
             patchUserBookmark.undo();
           }
         },
-        transformErrorResponse: (response) => response.data,
+        transformErrorResponse: (response) => response.data
       }
     ),
     loginUser: builder.mutation<AuthResponse, LoginRequest>({
-      query: (body) => ({ url: "login", method: "POST", body }),
-      onQueryStarted: async (_body, { queryFulfilled }) => {
+      query: (body) => ({ url: 'login', method: 'POST', body }),
+      onQueryStarted: async (_body, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled;
-          await SecureStore.setItemAsync("token", data.token);
-        } catch (error) {}
+          await SecureStore.setItemAsync('token', data.token);
+          dispatch(
+            api.endpoints.getNewsData.initiate(undefined, {
+              forceRefetch: true
+            })
+          );
+        } catch (error) {
+          /* empty */
+        }
       },
-      transformErrorResponse: (response) => response.data,
+      transformErrorResponse: (response) => response.data
     }),
-  }),
+    logoutUser: builder.mutation<null, void>({
+      queryFn: async (_arg, { dispatch }) => {
+        await SecureStore.deleteItemAsync('token');
+        dispatch(
+          api.util.updateQueryData('getNewsData', undefined, (draft) => {
+            return draft.map(({ isBookmarked, ...rest }) => ({ ...rest }));
+          })
+        );
+        dispatch(
+          api.util.updateQueryData('getUserBookmarks', undefined, () => [])
+        );
+        return { data: null };
+      }
+    })
+  })
 });
 
 export const {
   useGetNewsDataQuery,
-  useGetUserDataQuery,
+  useLazyGetUserDataQuery,
   useLoginUserMutation,
   useGetUserBookmarksQuery,
   useAddBookmarkMutation,
   useRemoveBookmarkMutation,
+  useLogoutUserMutation
 } = api;

@@ -1,23 +1,25 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import { api } from 'services/api';
 
-import { UiState } from "../types";
+import { UiState } from '../types';
 
 const initialState: UiState = {
   dialog: {
     isOpen: false,
-    title: "",
+    title: '',
     content: undefined,
-    action: undefined,
+    action: undefined
   },
   snackbar: {
     isOpen: false,
-    message: "",
+    message: ''
   },
   tabBarHeight: null,
+  previousScreen: null
 };
 
 const uiSlice = createSlice({
-  name: "ui",
+  name: 'ui',
   initialState,
   reducers: {
     openDialog: (state, { payload }) => {
@@ -25,33 +27,38 @@ const uiSlice = createSlice({
         isOpen: true,
         title: payload.title,
         content: payload.content,
-        action: payload.action,
+        action: payload.action
       };
     },
     closeDialog: (state) => {
       state.dialog = {
         isOpen: false,
-        title: "",
+        title: '',
         content: undefined,
-        action: undefined,
+        action: undefined
       };
     },
     openSnackbar: (state, { payload }) => {
       state.snackbar = {
         isOpen: true,
-        message: payload,
+        message: payload
       };
     },
     closeSnackbar: (state) => {
-      state.snackbar = {
-        isOpen: false,
-        message: "",
-      };
+      state.snackbar = initialState.snackbar;
     },
     setButtonTabBarHeight: (state, { payload }) => {
       state.tabBarHeight = payload;
     },
+    setPreviousScreen: (state, { payload }: { payload: string }) => {
+      state.previousScreen = payload;
+    }
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(api.endpoints.logoutUser.matchFulfilled, (state) => {
+      state.previousScreen = null;
+    });
+  }
 });
 
 export default uiSlice.reducer;
@@ -62,6 +69,7 @@ export const {
   openSnackbar,
   closeSnackbar,
   setButtonTabBarHeight,
+  setPreviousScreen
 } = uiSlice.actions;
 
 export const selectDialogState = (state: { ui: UiState }) => state.ui.dialog;

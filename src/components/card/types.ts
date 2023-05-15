@@ -4,4 +4,5 @@ export interface CardProps {
   image_url: string;
   publishedDate: string;
   width?: number | string;
+  previousScreen?: string;
 }

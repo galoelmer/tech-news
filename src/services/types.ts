@@ -1,4 +1,4 @@
-import { Article } from "@/context/types";
+import { Article } from '@/context/types';
 
 export interface AuthResponse {
   token: string;

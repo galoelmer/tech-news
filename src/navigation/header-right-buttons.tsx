@@ -1,32 +1,33 @@
-import { View } from "react-native";
-import { Button, TouchableRipple } from "react-native-paper";
-import { useRoute } from "@react-navigation/native";
+import { View } from 'react-native';
 
-import useNavigation from "@/hooks/useNavigation";
+import { useRoute } from '@react-navigation/native';
+import { Button, TouchableRipple } from 'react-native-paper';
+
+import useNavigation from '@/hooks/useNavigation';
 
 const HeaderRightButton = () => {
   const { navigate } = useNavigation();
   const { name } = useRoute();
 
-  const isAccountScreen = name === "Account";
+  const isAccountScreen = name === 'Account';
 
-  const navigateToHome = () => navigate("Home");
-  const navigateToAccount = () => navigate("Account", { screen: "Login" });
+  const navigateToHome = () => navigate('Home');
+  const navigateToAccount = () => navigate('Account', { screen: 'Login' });
 
   const buttonProps = {
-    icon: isAccountScreen ? "home-variant" : "account",
+    icon: isAccountScreen ? 'home-variant' : 'account',
     onPress: isAccountScreen ? navigateToHome : navigateToAccount,
-    label: isAccountScreen ? "Home" : "Login",
+    label: isAccountScreen ? 'Home' : 'Login'
   };
 
   return (
-    <View style={{ flexDirection: "row" }}>
+    <View style={{ flexDirection: 'row' }}>
       <TouchableRipple
         onPress={buttonProps.onPress}
         rippleColor="rgba(0, 0, 0, .32)"
         style={{
           borderRadius: 20,
-          marginHorizontal: 10,
+          marginHorizontal: 10
         }}
       >
         <Button

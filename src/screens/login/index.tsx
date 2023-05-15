@@ -1,30 +1,32 @@
-import { useState, useCallback } from "react";
-import { View } from "react-native";
-import { Link } from "@react-navigation/native";
-import { Button, TextInput, HelperText } from "react-native-paper";
-import { Formik, FormikHelpers } from "formik";
-import * as yup from "yup";
+import { useCallback, useState } from 'react';
+import { View } from 'react-native';
 
-import { useAppDispatch } from "@/hooks/useRedux";
-import useNavigation from "@/hooks/useNavigation";
-import { useLoginUserMutation } from "@/services/api";
-import { isFetchBaseQueryError } from "@/services/helpers";
-import { openSnackbar } from "@/context/reducers/ui-reducer";
+import { Link } from '@react-navigation/native';
+import { Formik, FormikHelpers } from 'formik';
+import { Button, HelperText, TextInput } from 'react-native-paper';
+import * as yup from 'yup';
 
-import styles from "./styles";
-import type { InitialValues } from "./types";
+// import { useAppDispatch } from "@/hooks/useRedux";
+// import { openSnackbar } from "@/context/reducers/ui-reducer";
 
-let LoginSchema = yup.object().shape({
+import styles from './styles';
+import type { InitialValues } from './types';
+
+import useNavigation from '@/hooks/useNavigation';
+import { useLoginUserMutation } from '@/services/api';
+import { isFetchBaseQueryError } from '@/services/helpers';
+
+const LoginSchema = yup.object().shape({
   email: yup
     .string()
-    .email("This field must be a valid email")
-    .required("This field is required."),
-  password: yup.string().required("This field is required."),
+    .email('This field must be a valid email')
+    .required('This field is required.'),
+  password: yup.string().required('This field is required.')
 });
 
 const LoginForm = () => {
   // TODO: add redirect if user is already logged in
-  const dispatch = useAppDispatch();
+  // const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   const [loginUser] = useLoginUserMutation();
   const [showPassword, setShowPassword] = useState(false);
@@ -32,14 +34,14 @@ const LoginForm = () => {
   const handleFormSubmit = useCallback(
     async (values: InitialValues, helpers: FormikHelpers<InitialValues>) => {
       try {
-        await loginUser(values).unwrap();
-        dispatch(openSnackbar("Welcome Back!"));
-        navigate("Home");
+        await loginUser(values);
+        navigate('Home');
+        // dispatch(openSnackbar("Welcome Back!")); //TODO: add snackbar on login success
       } catch (err) {
         if (isFetchBaseQueryError(err)) {
           const errorMessage =
-            "error" in err ? err.error : "Something went wrong";
-          helpers.setFieldError("message", errorMessage);
+            'error' in err ? err.error : 'Something went wrong';
+          helpers.setFieldError('message', errorMessage);
         }
       } finally {
         helpers.setSubmitting(false);
@@ -51,7 +53,7 @@ const LoginForm = () => {
   return (
     <View style={styles.container}>
       <Formik
-        initialValues={{ email: "", password: "", message: "" }}
+        initialValues={{ email: '', password: '', message: '' }}
         validationSchema={LoginSchema}
         onSubmit={handleFormSubmit}
       >
@@ -62,7 +64,7 @@ const LoginForm = () => {
           handleChange,
           isSubmitting,
           submitForm,
-          values,
+          values
         }) => (
           <View style={styles.form}>
             <TextInput
@@ -71,7 +73,7 @@ const LoginForm = () => {
               autoFocus
               autoComplete="email"
               autoCapitalize="none"
-              mode={"outlined"}
+              mode={'outlined'}
               outlineColor="#ddd"
               activeOutlineColor="#4E89AE"
               style={styles.input}
@@ -79,8 +81,8 @@ const LoginForm = () => {
               value={values.email}
               disabled={isSubmitting}
               error={!!errors.email && !!touched.email}
-              onBlur={handleBlur("email")}
-              onChangeText={handleChange("email")}
+              onBlur={handleBlur('email')}
+              onChangeText={handleChange('email')}
             />
             <HelperText
               type="error"
@@ -91,7 +93,7 @@ const LoginForm = () => {
             <TextInput
               id="password"
               label="Password"
-              mode={"outlined"}
+              mode={'outlined'}
               outlineColor="#ddd"
               activeOutlineColor="#4E89AE"
               style={styles.input}
@@ -99,13 +101,13 @@ const LoginForm = () => {
               value={values.password}
               disabled={isSubmitting}
               error={!!errors.password && !!touched.password}
-              onBlur={handleBlur("password")}
-              onChangeText={handleChange("password")}
+              onBlur={handleBlur('password')}
+              onChangeText={handleChange('password')}
               secureTextEntry={!showPassword}
               right={
                 <TextInput.Icon
                   onPress={() => setShowPassword(!showPassword)}
-                  icon={showPassword ? "eye" : "eye-off"}
+                  icon={showPassword ? 'eye' : 'eye-off'}
                 />
               }
             />
@@ -120,7 +122,7 @@ const LoginForm = () => {
             </HelperText>
             <Button
               style={styles.submitButton}
-              mode={"elevated"}
+              mode={'elevated'}
               textColor="#fff"
               onPress={submitForm}
               disabled={isSubmitting}
@@ -133,10 +135,10 @@ const LoginForm = () => {
         )}
       </Formik>
       <View style={styles.linksContainer}>
-        <Link style={styles.linkText} to={{ screen: "ResetPassword" }}>
+        <Link style={styles.linkText} to={{ screen: 'ResetPassword' }}>
           Forgot password?
         </Link>
-        <Link style={styles.linkText} to={{ screen: "Signup" }}>
+        <Link style={styles.linkText} to={{ screen: 'Signup' }}>
           Don't have an account? Sign up
         </Link>
       </View>

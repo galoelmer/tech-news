@@ -1,4 +1,4 @@
-import type { RootStackParamList } from "@/navigation/types";
+import type { RootStackParamList } from '@/navigation/types';
 
 export interface Article {
   id: string;
@@ -18,9 +18,9 @@ export interface NewsState {
   focusArticle: {
     id: string | null;
     url: string | null;
-    article: Article | null;
     isBookmarked: boolean;
-  };
+    previousScreen?: string;
+  } | null;
 }
 
 export interface AuthState {
@@ -48,4 +48,5 @@ export interface UiState {
   dialog: DialogState;
   snackbar: SnackbarState;
   tabBarHeight: number | null;
+  previousScreen: string | null;
 }

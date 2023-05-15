@@ -1,11 +1,15 @@
-import { Image, View, Pressable } from "react-native";
-import { Badge, Text } from "react-native-paper";
-import StyleSheet from "react-native-media-query";
+import { Image, Pressable, View } from 'react-native';
 
-import useNavigation from "hooks/useNavigation";
-import { CardProps } from "./types";
-import formatDate from "utils/formatDate";
-import { isWeb } from "utils/checkPlatform";
+import useNavigation from 'hooks/useNavigation';
+import StyleSheet from 'react-native-media-query';
+import { Badge, Text } from 'react-native-paper';
+import { isWeb } from 'utils/checkPlatform';
+import formatDate from 'utils/formatDate';
+
+import { CardProps } from './types';
+
+import { setPreviousScreen } from '@/context/reducers/ui-reducer';
+import { useAppDispatch } from '@/hooks/useRedux';
 
 const CardComponent = ({
   id,
@@ -13,13 +17,20 @@ const CardComponent = ({
   publishedDate,
   image_url,
   width,
+  previousScreen
 }: CardProps) => {
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
 
   return (
     <Pressable
-      onPress={() => navigate("Article", { id })}
-      style={{ width: width || "100%" }}
+      onPress={() => {
+        if (previousScreen) {
+          dispatch(setPreviousScreen(previousScreen));
+          navigate('Article', { id });
+        }
+      }}
+      style={{ width: width || '100%' }}
     >
       <View style={styles.container} dataSet={{ media: ids.container }}>
         <View style={styles.content}>
@@ -48,51 +59,51 @@ export default CardComponent;
 const { styles, ids } = StyleSheet.create({
   container: {
     margin: 10,
-    overflow: "hidden",
+    overflow: 'hidden',
     height: 120,
-    backgroundColor: "#f9f9f9",
-    flexDirection: "row",
+    backgroundColor: '#f9f9f9',
+    flexDirection: 'row',
     borderRadius: 5,
-    ...(isWeb && { cursor: "pointer" }),
-    shadowColor: "#000",
+    ...(isWeb && { cursor: 'pointer' }),
+    shadowColor: '#000',
     shadowOffset: {
       width: 0,
-      height: 2,
+      height: 2
     },
     shadowOpacity: 0.05,
     shadowRadius: 3.22,
-    "@media (min-width: 670px)": {
-      height: 140,
-    },
+    '@media (min-width: 670px)': {
+      height: 140
+    }
   },
   content: {
     flex: 1,
     marginRight: 35,
     marginLeft: 5,
-    paddingTop: 3,
+    paddingTop: 3
   },
   postDateContainer: {
-    flexDirection: "row",
-    alignItems: "center",
+    flexDirection: 'row',
+    alignItems: 'center'
   },
   badge: {
-    backgroundColor: "#949bad",
+    backgroundColor: '#949bad',
     marginRight: 5,
-    alignSelf: "center",
+    alignSelf: 'center'
   },
-  postDate: { color: "#949bad" },
+  postDate: { color: '#949bad' },
   title: {
-    fontFamily: "Roboto",
+    fontFamily: 'Roboto',
     marginTop: 8,
-    color: "#000",
-    ...(isWeb && { fontSize: 14 }),
+    color: '#000',
+    ...(isWeb && { fontSize: 14 })
   },
   image: {
     width: 130,
     height: 120,
     borderRadius: 5,
-    "@media (min-width: 670px)": {
-      height: 140,
-    },
-  },
+    '@media (min-width: 670px)': {
+      height: 140
+    }
+  }
 });

@@ -1,20 +1,20 @@
-import { useEffect } from "react";
-import { View, ActivityIndicator, Image } from "react-native";
-import { Text, Badge } from "react-native-paper";
+import { useEffect } from 'react';
+import { ActivityIndicator, Image, View } from 'react-native';
 
-import { useGetNewsDataQuery } from "services/api";
-import formatDate from "utils/formatDate";
-import { useAppDispatch } from "hooks/useRedux";
-import { setFocusArticleUrl } from "@/context/reducers/news-reducer";
+import { useAppDispatch, useAppSelector } from 'hooks/useRedux';
+import { NewsDetailsProps } from 'navigation/types';
+import { Badge, Text } from 'react-native-paper';
+import { useGetNewsDataQuery, useGetUserBookmarksQuery } from 'services/api';
+import formatDate from 'utils/formatDate';
 
-import Toast from "@/components/toast";
-import NewBodyText from "./news-body-text";
-import withDialog from "@/components/dialog";
-import SafeAreaView from "@/components/safe-area-view";
-import ScrollViewWithButton from "@/components/scrollview-with-button";
+import NewBodyText from './news-body-text';
+import styles, { ids } from './styles';
 
-import styles, { ids } from "./styles";
-import { NewsDetailsProps } from "navigation/types";
+import withDialog from '@/components/dialog';
+import SafeAreaView from '@/components/safe-area-view';
+import ScrollViewWithButton from '@/components/scrollview-with-button';
+import Toast from '@/components/toast';
+import { setFocusArticle } from '@/context/reducers/news-reducer';
 
 interface PostCreatorsProps {
   creators: string[] | null | undefined;
@@ -29,44 +29,53 @@ const PostCreators = ({ creators }: PostCreatorsProps) => {
     <>
       <Badge size={5} style={styles.badge} />
       <Text style={styles.creator} variant="labelSmall">
-        {`By ${creators.join(", ")}`}
+        {`By ${creators.join(', ')}`}
       </Text>
     </>
   );
 };
 
-const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
+const NewsDetails = ({ route }: NewsDetailsProps) => {
   const dispatch = useAppDispatch();
   const { id } = route.params;
-  const { data, isLoading } = useGetNewsDataQuery();
+  const previousScreen = useAppSelector((state) => state.ui.previousScreen);
 
-  const article = data?.find((item) => item.id === id);
+  const { article, isLoadingArticle } = useGetNewsDataQuery(undefined, {
+    skip: previousScreen === 'bookmarks',
+    selectFromResult: ({ data, isLoading }) => ({
+      article: data?.find((item) => item.id === id),
+      isLoadingArticle: isLoading
+    })
+  });
+
+  const { bookmark, isLoadingBookmark } = useGetUserBookmarksQuery(undefined, {
+    skip: previousScreen === 'home',
+    selectFromResult: ({ data, isLoading }) => ({
+      bookmark: data?.find((item) => item.id === id),
+      isLoadingBookmark: isLoading
+    })
+  });
+
+  const currentArticle = article ?? bookmark;
+  const isLoading = isLoadingArticle || isLoadingBookmark;
 
   useEffect(() => {
     dispatch(
-      setFocusArticleUrl({
-        url: article?.link ?? null,
-        id: article?.id ?? null,
-        article: article || null,
-        isBookmarked: article?.isBookmarked ?? false,
+      setFocusArticle({
+        id: currentArticle?.id,
+        url: currentArticle?.link,
+        isBookmarked: currentArticle?.isBookmarked
       })
     );
-    const removeListener = navigation.addListener("beforeRemove", () =>
-      dispatch(
-        setFocusArticleUrl({
-          url: null,
-          id: null,
-          article: null,
-          isBookmarked: false,
-        })
-      )
-    );
-    return removeListener;
-  }, [article]);
+
+    return () => {
+      dispatch(setFocusArticle(null));
+    };
+  }, [currentArticle?.isBookmarked]);
 
   if (isLoading) {
     return (
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -82,23 +91,23 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
               dataSet={{ media: ids.title }}
               variant="titleLarge"
             >
-              {article?.title}
+              {currentArticle?.title}
             </Text>
             <View
               style={styles.postDateWrapper}
               dataSet={{ media: ids.postDateWrapper }}
             >
               <Text style={styles.postDate} variant="labelSmall">
-                {formatDate(article?.pubDate ?? "")}
+                {formatDate(currentArticle?.pubDate ?? '')}
               </Text>
-              <PostCreators creators={article?.creator} />
+              <PostCreators creators={currentArticle?.creator} />
             </View>
             <Image
-              source={{ uri: article?.image_url }}
+              source={{ uri: currentArticle?.image_url }}
               style={styles.image}
               dataSet={{ media: ids.image }}
             />
-            <NewBodyText text={article?.content ?? ""} />
+            <NewBodyText text={currentArticle?.content ?? ''} />
           </View>
         </ScrollViewWithButton>
       </SafeAreaView>

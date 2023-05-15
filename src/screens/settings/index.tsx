@@ -1,20 +1,19 @@
-import { StyleSheet, View, Pressable, PressableProps } from "react-native";
-import { List, Divider, Button, Text, ListIconProps } from "react-native-paper";
-import { useDispatch } from "react-redux";
-import * as SecureStore from "expo-secure-store";
+import { Pressable, PressableProps, StyleSheet, View } from 'react-native';
 
-import { logoutUser } from "@/context/reducers/auth-reducer";
-import useAuth from "hooks/useAuth";
+import * as SecureStore from 'expo-secure-store';
+import useAuth from 'hooks/useAuth';
+import { Button, Divider, List, ListIconProps, Text } from 'react-native-paper';
 
-import type { SettingsProps } from "@/navigation/types";
+import type { SettingsProps } from '@/navigation/types';
+import { useLogoutUserMutation } from '@/services/api';
 type ListItemProps = {
   title: string;
-  icon: ListIconProps["icon"];
-  onPress: PressableProps["onPress"];
+  icon: ListIconProps['icon'];
+  onPress: PressableProps['onPress'];
 };
 
 const ListItem = ({ title, icon, onPress }: ListItemProps) => {
-  const color = (pressed: boolean) => (pressed ? "#4777B1" : "#000");
+  const color = (pressed: boolean) => (pressed ? '#4777B1' : '#000');
 
   return (
     <View>
@@ -22,8 +21,8 @@ const ListItem = ({ title, icon, onPress }: ListItemProps) => {
         {({ pressed }) => (
           <List.Item
             titleStyle={{
-              fontFamily: "Roboto",
-              color: color(pressed),
+              fontFamily: 'Roboto',
+              color: color(pressed)
             }}
             title={title}
             left={() => <List.Icon icon={icon} color={color(pressed)} />}
@@ -39,8 +38,8 @@ const ListItem = ({ title, icon, onPress }: ListItemProps) => {
 };
 
 const Settings = ({ navigation }: SettingsProps) => {
-  const dispatch = useDispatch();
   const { isAuth } = useAuth();
+  const [logoutUser, { isLoading }] = useLogoutUserMutation();
 
   return (
     <View style={styles.container}>
@@ -52,26 +51,27 @@ const Settings = ({ navigation }: SettingsProps) => {
           <ListItem
             title="Account Information"
             icon="account-outline"
-            onPress={() => navigation.navigate("AccountInfo")}
+            onPress={() => navigation.navigate('AccountInfo')}
           />
         )}
         <ListItem
           title="Appearance"
           icon="theme-light-dark"
-          onPress={() => navigation.navigate("Appearance")}
+          onPress={() => navigation.navigate('Appearance')}
         />
       </List.Section>
       {isAuth && (
         <Button
-          disabled={!isAuth}
+          disabled={!isAuth || isLoading}
           style={styles.logoutButton}
           labelStyle={styles.logoutButtonLabel}
           mode="outlined"
-          onPress={() => {
-            SecureStore.deleteItemAsync("token");
-            dispatch(logoutUser());
-            navigation.navigate("Home");
+          onPress={async () => {
+            await SecureStore.deleteItemAsync('token');
+            await logoutUser();
+            navigation.navigate('Home');
           }}
+          loading={isLoading}
         >
           Log out
         </Button>
@@ -84,28 +84,28 @@ export default Settings;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flex: 1
   },
   header: {
-    fontFamily: "RobotoBold",
-    textAlign: "center",
+    fontFamily: 'RobotoBold',
+    textAlign: 'center',
     paddingVertical: 20,
-    backgroundColor: "#F1F0F6",
+    backgroundColor: '#F1F0F6'
   },
   list: {
     flex: 1,
-    paddingHorizontal: 25,
+    paddingHorizontal: 25
   },
   logoutButton: {
     borderWidth: 2,
-    borderColor: "#000",
+    borderColor: '#000',
     marginBottom: 30,
-    marginHorizontal: 25,
+    marginHorizontal: 25
   },
   logoutButtonLabel: {
-    fontFamily: "RobotoBold",
+    fontFamily: 'RobotoBold',
     fontSize: 16,
     letterSpacing: 2,
-    color: "#000",
-  },
+    color: '#000'
+  }
 });

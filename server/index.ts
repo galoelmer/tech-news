@@ -1,16 +1,13 @@
-import { createServer, Response } from "miragejs";
-import clc from "cli-color";
-import jwtDecode from "jwt-decode";
+import clc from 'cli-color';
+import jwtDecode from 'jwt-decode';
+import { createServer, Response } from 'miragejs';
 
-import data from "./mock-data";
+import data from './mock-data';
 
-const TOKEN =
-  "eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOiJ2YlhxaW9CNEpOZmxBYTF3SlJYVEEifQ.xBxzLEzjymw922hw5__qjTjsqR7J7sqXEr7YVk4VuKA";
+export function makeServer({ environment = 'development' } = {}) {
+  console.log(clc.bgMagentaBright('🚀 ~ Development Server running...'));
 
-export function makeServer({ environment = "test" } = {}) {
-  console.log(clc.bgMagentaBright("🚀 ~ Development Server running..."));
-
-  let server = createServer({
+  const server = createServer({
     environment,
 
     seeds(server) {
@@ -18,19 +15,19 @@ export function makeServer({ environment = "test" } = {}) {
     },
 
     routes() {
-      this.namespace = "api";
+      this.namespace = 'api';
       this.timing = 1500;
 
       this.pretender.handledRequest = (_, __, request) => logger(request);
 
-      this.get("/get-news-data", (schema, request) => {
+      this.get('/get-news-data', (schema, request) => {
         const token = decodeToken(request);
         const data = schema.db.articles;
-        const userId = schema.db.users[0].userId; // test user
+        const user = schema.db.users.findBy({ userId: token?.userId }); // test user
 
-        if (token?.userId === userId) {
+        if (token?.userId === user?.userId) {
           schema.db.bookmarks.forEach((bookmark: any) => {
-            if (bookmark.users.includes(userId)) {
+            if (bookmark.users.includes(token?.userId)) {
               data.forEach((article: any) => {
                 if (article.id === bookmark.id) {
                   article.isBookmarked = true;
@@ -42,51 +39,55 @@ export function makeServer({ environment = "test" } = {}) {
 
         return new Response(
           200,
-          { "Content-Type": "application/json" },
+          { 'Content-Type': 'application/json' },
           { data }
         );
       });
 
-      this.get("get-user-bookmarks", (schema, request) => {
+      this.get('get-user-bookmarks', (schema, request) => {
         const token = decodeToken(request);
-        const userId = schema.db.users[0].userId; // test user
 
-        if (token?.userId === userId) {
-          const bookmarks = schema.db.bookmarks.filter((bookmark: any) =>
-            bookmark.users.includes(token?.userId)
-          );
-
+        if (!token) {
           return new Response(
-            200,
-            { "Content-Type": "application/json" },
+            403,
+            { 'Content-Type': 'application/json' },
             {
-              data: bookmarks,
+              status: 'FETCH_ERROR',
+              error: 'Invalid token'
             }
           );
         }
 
+        const bookmarks = schema.db.bookmarks.filter((bookmark: any) => {
+          if (bookmark.users.includes(token?.userId)) {
+            delete bookmark.users;
+            bookmark.isBookmarked = true;
+            return bookmark;
+          }
+          return false;
+        });
+
         return new Response(
-          403,
-          { "Content-Type": "application/json" },
+          200,
+          { 'Content-Type': 'application/json' },
           {
-            status: "FETCH_ERROR",
-            error: "Invalid token",
+            data: bookmarks
           }
         );
       });
 
-      this.post("add-bookmark", (schema, request) => {
+      this.post('add-bookmark', (schema, request) => {
         const { articleId, article } = JSON.parse(request.requestBody);
         const token = decodeToken(request);
-        const userId = schema.db.users[0].userId; // test user
+        const user = schema.db.users.findBy({ userId: token?.userId }); // test user
 
-        if (token?.userId !== userId) {
+        if (token?.userId !== user?.userId) {
           return new Response(
             403,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              status: "FETCH_ERROR",
-              error: "Invalid token",
+              status: 'FETCH_ERROR',
+              error: 'Invalid token'
             }
           );
         }
@@ -94,35 +95,37 @@ export function makeServer({ environment = "test" } = {}) {
         if (!articleId || !article) {
           return new Response(
             404,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              status: "FETCH_ERROR",
-              error: "Document not found",
+              status: 'FETCH_ERROR',
+              error: 'Document not found'
             }
           );
         }
 
-        schema.db.bookmarks.forEach((bookmark: any) => {
-          if (bookmark.id === articleId) {
-            bookmark.users.push(token?.userId);
-          } else {
-            schema.db.bookmarks.push({
-              ...article,
-              users: [token?.userId],
-            });
-          }
-        });
+        const bookmarkIndex = schema.db.bookmarks.findIndex(
+          (bookmark) => bookmark.id === articleId
+        );
+
+        if (bookmarkIndex !== -1) {
+          schema.db.bookmarks[bookmarkIndex].users.push(token?.userId);
+        } else {
+          schema.db.bookmarks.insert({
+            ...article,
+            users: [token?.userId]
+          });
+        }
 
         return new Response(
           200,
-          { "Content-Type": "application/json" },
+          { 'Content-Type': 'application/json' },
           {
-            general: `Article ${articleId} was added to favorites.`,
+            general: `Article ${articleId} was added to bookmarks.`
           }
         );
       });
 
-      this.post("remove-bookmark", (schema, request) => {
+      this.post('remove-bookmark', (schema, request) => {
         const { articleId } = JSON.parse(request.requestBody);
         const token = decodeToken(request);
         const userId = schema.db.users[0].userId; // test user
@@ -130,10 +133,10 @@ export function makeServer({ environment = "test" } = {}) {
         if (token?.userId !== userId) {
           return new Response(
             403,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              status: "FETCH_ERROR",
-              error: "Invalid token",
+              status: 'FETCH_ERROR',
+              error: 'Invalid token'
             }
           );
         }
@@ -141,35 +144,39 @@ export function makeServer({ environment = "test" } = {}) {
         if (!articleId) {
           return new Response(
             404,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              status: "FETCH_ERROR",
-              error: "Document not found",
+              status: 'FETCH_ERROR',
+              error: 'Document not found'
             }
           );
         }
 
-        schema.db.bookmarks.forEach((bookmark: any) => {
-          if (bookmark.id === articleId) {
-            const index = bookmark.users.indexOf(token?.userId);
-            bookmark.users.splice(index, 1);
+        const bookmarkIndex = schema.db.bookmarks.findIndex((bookmark) =>
+          bookmark.users.includes(token?.userId)
+        );
 
-            if (bookmark.users.length === 0) {
-              schema.db.bookmarks.remove(bookmark);
-            }
+        if (bookmarkIndex !== -1) {
+          const index = schema.db.bookmarks[bookmarkIndex].users.indexOf(
+            token?.userId
+          );
+          schema.db.bookmarks[bookmarkIndex].users.splice(index, 1);
+
+          if (schema.db.bookmarks[bookmarkIndex].users.length === 0) {
+            schema.db.bookmarks.splice(bookmarkIndex, 1);
           }
-        });
+        }
 
         return new Response(
           200,
-          { "Content-Type": "application/json" },
+          { 'Content-Type': 'application/json' },
           {
-            general: `Article ${articleId} was remove from bookmarks.`,
+            general: `Article ${articleId} was remove from bookmarks.`
           }
         );
       });
 
-      this.post("/login", async (schema, request) => {
+      this.post('/login', async (schema, request) => {
         const { email, password } = JSON.parse(request.requestBody);
 
         const user = schema.db.users.findBy({ email });
@@ -177,46 +184,46 @@ export function makeServer({ environment = "test" } = {}) {
         if (user.email === email && user.password === password) {
           return new Response(
             200,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              token: TOKEN,
+              token: user.token,
               ...{
                 userId: user.userId,
-                userName: user.userName,
-              },
+                userName: user.userName
+              }
             }
           );
         } else {
           return new Response(
             403,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              status: "FETCH_ERROR",
-              error: "Invalid email or password",
+              status: 'FETCH_ERROR',
+              error: 'Invalid email or password'
             }
           );
         }
       });
 
-      this.post("/signup", () => {
+      this.post('/signup', () => {
         return new Response(
           500,
-          { "Content-Type": "application/json" },
-          { general: "Signup not available on Dev Mode" }
+          { 'Content-Type': 'application/json' },
+          { general: 'Signup not available on Dev Mode' }
         );
       });
 
-      this.get("/get-user-data", (schema, request) => {
+      this.get('/get-user-data', (schema, request) => {
         const token = decodeToken(request);
-        const userId = schema.db.users[0].userId; // test user
+        const user = schema.db.users.findBy({ userId: token?.userId }); // test user
 
-        if (token?.userId !== userId) {
+        if (token?.userId !== user?.userId) {
           return new Response(
             403,
-            { "Content-Type": "application/json" },
+            { 'Content-Type': 'application/json' },
             {
-              status: "FETCH_ERROR",
-              error: "Invalid token",
+              status: 'FETCH_ERROR',
+              error: 'Invalid token'
             }
           );
         } else {
@@ -224,25 +231,25 @@ export function makeServer({ environment = "test" } = {}) {
         }
       });
 
-      this.post("/update-user-password", () => {
+      this.post('/update-user-password', () => {
         return new Response(
           500,
-          { "Content-Type": "application/json" },
-          "Reset Password not available on Dev Mode"
+          { 'Content-Type': 'application/json' },
+          'Reset Password not available on Dev Mode'
         );
       });
 
-      this.post("/reset-password", () => {
-        throw new Error("Reset password not available on Dev mode");
+      this.post('/reset-password', () => {
+        throw new Error('Reset password not available on Dev mode');
       });
-    },
+    }
   });
 
   return server;
 }
 
 type Logger = Parameters<
-  ReturnType<typeof createServer>["pretender"]["handledRequest"]
+  ReturnType<typeof createServer>['pretender']['handledRequest']
 >[2] & { url?: string; method?: string };
 
 const logger = (request: Logger) => {
@@ -270,14 +277,14 @@ const logger = (request: Logger) => {
 };
 
 const decodeToken = (request: any) => {
-  const token = request?.requestHeaders?.authorization?.split(" ")[1];
+  const token = request?.requestHeaders?.authorization?.split(' ')[1];
   const decodedToken: { userId?: string } | null = token
     ? jwtDecode(token)
     : null;
 
   if (decodedToken?.userId) {
     return {
-      userId: decodedToken.userId,
+      userId: decodedToken.userId
     };
   } else {
     return null;

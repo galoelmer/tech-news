@@ -1,5 +1,6 @@
-import { useState } from "react";
-import { Button, Menu } from "react-native-paper";
+import { useState } from 'react';
+
+import { Button, Menu } from 'react-native-paper';
 
 const ShareButton = () => {
   const [visible, setVisible] = useState(false);
@@ -21,13 +22,13 @@ const ShareButton = () => {
         </Button>
       }
     >
-      {["facebook", "twitter", "linkedin", "instagram", "email"].map((item) => (
+      {['facebook', 'twitter', 'linkedin', 'instagram', 'email'].map((item) => (
         <Menu.Item
           key={item}
           onPress={closeMenu}
           leadingIcon={item}
           title={item}
-          titleStyle={{ textTransform: "capitalize" }}
+          titleStyle={{ textTransform: 'capitalize' }}
           accessibilityLabel={`share via ${item}`}
         />
       ))}

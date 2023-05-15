@@ -1,29 +1,27 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice } from '@reduxjs/toolkit';
+import { api } from 'services/api';
 
-import { NewsState } from "../types";
+import { NewsState } from '../types';
 
 const initialState: NewsState = {
-  focusArticle: {
-    id: null,
-    url: null,
-    article: null,
-    isBookmarked: false,
-  },
+  focusArticle: null
 };
 
 export const newsSlice = createSlice({
-  name: "news",
+  name: 'news',
   initialState,
   reducers: {
-    setFocusArticleUrl: (state, action) => {
+    setFocusArticle: (state, action) => {
       state.focusArticle = action.payload;
-    },
+    }
   },
+  extraReducers: (builder) => {
+    builder.addMatcher(api.endpoints.logoutUser.matchFulfilled, (state) => {
+      state.focusArticle = null;
+    });
+  }
 });
 
-export const { setFocusArticleUrl } = newsSlice.actions;
-
-export const selectFocusArticleUrl = (state: { news: NewsState }) =>
-  state.news.focusArticle;
+export const { setFocusArticle } = newsSlice.actions;
 
 export default newsSlice.reducer;
