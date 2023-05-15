@@ -11,9 +11,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#4A75AA"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.galoelmer.technews"
