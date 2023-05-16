@@ -1,3 +1,5 @@
+import { Dimensions } from 'react-native';
+
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { useFlipper } from '@react-navigation/devtools';
@@ -40,6 +42,8 @@ const Drawer = createDrawerNavigator();
 const LoginStack = () => {
   return (
     <TopTab.Navigator
+      initialRouteName="Login"
+      initialLayout={{ width: Dimensions.get('window').width }}
       screenOptions={{
         tabBarLabelStyle: {
           fontFamily: 'Roboto',
@@ -119,7 +123,6 @@ const SettingsStack = () => {
 
 const TabNavigator = () => {
   const { isAuth } = useAuth();
-  console.log('TCL ▶︎ file: index.tsx:122 ▶︎ isAuth:', isAuth);
   return (
     <Tab.Navigator
       initialRouteName="Home"

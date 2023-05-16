@@ -6,13 +6,12 @@ import { Formik, FormikHelpers } from 'formik';
 import { Button, HelperText, TextInput } from 'react-native-paper';
 import * as yup from 'yup';
 
-// import { useAppDispatch } from "@/hooks/useRedux";
-// import { openSnackbar } from "@/context/reducers/ui-reducer";
-
 import styles from './styles';
 import type { InitialValues } from './types';
 
+import { openSnackbar } from '@/context/reducers/ui-reducer';
 import useNavigation from '@/hooks/useNavigation';
+import { useAppDispatch } from '@/hooks/useRedux';
 import { useLoginUserMutation } from '@/services/api';
 import { isFetchBaseQueryError } from '@/services/helpers';
 
@@ -26,7 +25,7 @@ const LoginSchema = yup.object().shape({
 
 const LoginForm = () => {
   // TODO: add redirect if user is already logged in
-  // const dispatch = useAppDispatch();
+  const dispatch = useAppDispatch();
   const { navigate } = useNavigation();
   const [loginUser] = useLoginUserMutation();
   const [showPassword, setShowPassword] = useState(false);
@@ -34,9 +33,9 @@ const LoginForm = () => {
   const handleFormSubmit = useCallback(
     async (values: InitialValues, helpers: FormikHelpers<InitialValues>) => {
       try {
-        await loginUser(values);
+        await loginUser(values).unwrap();
         navigate('Home');
-        // dispatch(openSnackbar("Welcome Back!")); //TODO: add snackbar on login success
+        dispatch(openSnackbar({ message: 'Welcome Back!' })); //TODO: add snackbar on login success
       } catch (err) {
         if (isFetchBaseQueryError(err)) {
           const errorMessage =
@@ -70,17 +69,17 @@ const LoginForm = () => {
             <TextInput
               id="email"
               label="Email Address"
-              autoFocus
               autoComplete="email"
               autoCapitalize="none"
               mode={'outlined'}
-              outlineColor="#ddd"
+              outlineColor={
+                !!errors.email && !!touched.email ? '#b14c47' : '#ddd'
+              }
               activeOutlineColor="#4E89AE"
               style={styles.input}
               keyboardType="email-address"
               value={values.email}
               disabled={isSubmitting}
-              error={!!errors.email && !!touched.email}
               onBlur={handleBlur('email')}
               onChangeText={handleChange('email')}
             />
@@ -94,13 +93,14 @@ const LoginForm = () => {
               id="password"
               label="Password"
               mode={'outlined'}
-              outlineColor="#ddd"
+              outlineColor={
+                !!errors.password && !!touched.password ? '#b14c47' : '#ddd'
+              }
               activeOutlineColor="#4E89AE"
               style={styles.input}
               keyboardType="default"
               value={values.password}
               disabled={isSubmitting}
-              error={!!errors.password && !!touched.password}
               onBlur={handleBlur('password')}
               onChangeText={handleChange('password')}
               secureTextEntry={!showPassword}

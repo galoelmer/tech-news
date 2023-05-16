@@ -181,7 +181,7 @@ export function makeServer({ environment = 'development' } = {}) {
 
         const user = schema.db.users.findBy({ email });
 
-        if (user.email === email && user.password === password) {
+        if (user?.email === email && user?.password === password) {
           return new Response(
             200,
             { 'Content-Type': 'application/json' },

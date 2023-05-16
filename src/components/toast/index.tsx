@@ -1,54 +1,71 @@
-import { StyleSheet, View } from "react-native";
-import { Snackbar, Text } from "react-native-paper";
-import Animated, { SlideInDown } from "react-native-reanimated";
-import Icon from "@expo/vector-icons/MaterialCommunityIcons";
+import { useEffect } from 'react';
+import { StyleSheet, View } from 'react-native';
 
-import { closeSnackbar } from "@/context/reducers/ui-reducer";
-import { useAppSelector, useAppDispatch } from "@/hooks/useRedux";
+import Icon from '@expo/vector-icons/MaterialCommunityIcons';
+import { Snackbar, Text } from 'react-native-paper';
+import Animated, { SlideInDown } from 'react-native-reanimated';
+
+import { closeSnackbar } from '@/context/reducers/ui-reducer';
+import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
+
+type ToastProps = {
+  toastId?: string;
+};
 
 // TODO: create toast with identification keys
-const Toast = () => {
+const Toast = ({ toastId }: ToastProps) => {
   const dispatch = useAppDispatch();
   const tabBarHeight = useAppSelector((state) => state.ui.tabBarHeight);
-  const { isOpen, message } = useAppSelector((state) => state.ui.snackbar);
-
-  if (!isOpen) return null;
+  const { isOpen, message, keyId } = useAppSelector(
+    (state) => state.ui.snackbar
+  );
 
   const onDismissSnackBar = () => {
     dispatch(closeSnackbar());
   };
 
+  useEffect(() => {
+    onDismissSnackBar();
+  }, []);
+
+  if (!isOpen) return null;
+
+  if (keyId) {
+    if (keyId !== toastId) return null;
+  }
+
   return (
     <Animated.View
-      entering={SlideInDown.duration(800)}
+      entering={SlideInDown.duration(600)}
       style={styles.container}
     >
       <Snackbar
         visible
         onDismiss={onDismissSnackBar}
         duration={3500}
+        elevation={2}
         onIconPress={onDismissSnackBar}
         icon="close"
         style={{
-          backgroundColor: "#2b486b",
+          backgroundColor: '#2b486b',
           marginHorizontal: 50,
-          marginBottom: tabBarHeight ?? 60,
+          marginBottom: tabBarHeight ?? 60
         }}
       >
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
+            flexDirection: 'row',
+            alignItems: 'center'
           }}
         >
           <Icon name="bookmark-plus" size={25} color="#eef3fb" />
           <Text
             style={{
-              fontFamily: "RobotoBold",
+              fontFamily: 'RobotoBold',
               fontSize: 16,
               letterSpacing: 1,
-              color: "#eef3fb",
-              marginLeft: 5,
+              color: '#eef3fb',
+              marginLeft: 5
             }}
           >
             {message}
@@ -61,8 +78,8 @@ const Toast = () => {
 
 const styles = StyleSheet.create({
   container: {
-    justifyContent: "space-between",
-  },
+    justifyContent: 'space-between'
+  }
 });
 
 export default Toast;

@@ -5,6 +5,7 @@ import { useFonts } from 'expo-font';
 import { useLazyGetUserDataQuery } from 'services/api';
 
 import BackgroundContainer from '@/components/gradient-background';
+import Toast from '@/components/toast';
 import Navigation from '@/navigation';
 
 export default function App() {
@@ -34,6 +35,7 @@ export default function App() {
   return (
     <BackgroundContainer>
       <Navigation />
+      <Toast />
     </BackgroundContainer>
   );
 }

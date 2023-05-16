@@ -111,7 +111,7 @@ const NewsDetails = ({ route }: NewsDetailsProps) => {
           </View>
         </ScrollViewWithButton>
       </SafeAreaView>
-      <Toast />
+      <Toast toastId="bookmark-toast" />
     </>
   );
 };

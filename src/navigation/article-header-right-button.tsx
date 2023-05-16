@@ -64,14 +64,24 @@ const ArticleHeaderRightButton = () => {
             if (focusArticle?.id) {
               try {
                 if (focusArticle.isBookmarked) {
-                  dispatch(openSnackbar('Article Unsaved!')); // TODO: fix toast not showing up
+                  dispatch(
+                    openSnackbar({
+                      message: 'Article Unsaved!',
+                      keyId: 'bookmark-toast'
+                    })
+                  ); // TODO: fix toast not showing up
                   await removeBookmark({
                     articleId: focusArticle.id
                   });
                 } else {
                   const currentArticle = article || bookmark;
                   if (currentArticle) {
-                    dispatch(openSnackbar('Article Saved!'));
+                    dispatch(
+                      openSnackbar({
+                        message: 'Article Saved!',
+                        keyId: 'bookmark-toast'
+                      })
+                    );
                     await addBookmark({
                       articleId: focusArticle.id,
                       article: currentArticle

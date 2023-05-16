@@ -12,7 +12,8 @@ const initialState: UiState = {
   },
   snackbar: {
     isOpen: false,
-    message: ''
+    message: '',
+    keyId: undefined
   },
   tabBarHeight: null,
   previousScreen: null
@@ -41,7 +42,8 @@ const uiSlice = createSlice({
     openSnackbar: (state, { payload }) => {
       state.snackbar = {
         isOpen: true,
-        message: payload
+        message: payload.message,
+        keyId: payload?.keyId
       };
     },
     closeSnackbar: (state) => {
