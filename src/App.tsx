@@ -2,11 +2,11 @@ import { useEffect } from 'react';
 import { ActivityIndicator, View } from 'react-native';
 
 import { useFonts } from 'expo-font';
-import { useLazyGetUserDataQuery } from 'services/api';
 
 import BackgroundContainer from '@/components/gradient-background';
 import Toast from '@/components/toast';
 import Navigation from '@/navigation';
+import { useLazyGetUserDataQuery } from '@/services/api';
 
 export default function App() {
   const [getUserData, { isLoading }] = useLazyGetUserDataQuery();

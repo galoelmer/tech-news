@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { memo, useEffect } from 'react';
 import { StyleSheet, View } from 'react-native';
 
 import Icon from '@expo/vector-icons/MaterialCommunityIcons';
@@ -25,7 +25,9 @@ const Toast = ({ toastId }: ToastProps) => {
   };
 
   useEffect(() => {
-    onDismissSnackBar();
+    if (isOpen) {
+      onDismissSnackBar();
+    }
   }, []);
 
   if (!isOpen) return null;
@@ -82,4 +84,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Toast;
+export default memo(Toast);

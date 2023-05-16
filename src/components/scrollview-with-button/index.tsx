@@ -1,41 +1,41 @@
-import { useRef } from "react";
+import { useRef } from 'react';
 import {
-  ScrollView,
-  ScrollViewProps,
-  NativeSyntheticEvent,
-  NativeScrollEvent,
   Dimensions,
-} from "react-native";
-import { IconButton, IconButtonProps } from "react-native-paper";
-import Animated, {
-  withSpring,
-  useSharedValue,
-  useAnimatedStyle,
-} from "react-native-reanimated";
-import StyleSheet from "react-native-media-query";
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  ScrollView,
+  ScrollViewProps
+} from 'react-native';
 
-import { isWeb } from "utils/checkPlatform";
+import StyleSheet from 'react-native-media-query';
+import { IconButton, IconButtonProps } from 'react-native-paper';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withSpring
+} from 'react-native-reanimated';
+import { isWeb } from 'utils/checkPlatform';
 
 interface ScrollToTopProps extends React.PropsWithChildren<{}> {
-  scrollviewStyles?: ScrollViewProps["style"];
-  buttonStyles?: IconButtonProps["style"];
+  scrollviewStyles?: ScrollViewProps['style'];
+  buttonStyles?: IconButtonProps['style'];
 }
 
 const ScrollViewWithButton = ({
   children,
   scrollviewStyles,
-  buttonStyles,
+  buttonStyles
 }: ScrollToTopProps) => {
   const scrollViewRef = useRef<ScrollView>(null);
   const offset = useSharedValue(0);
-  const { width, height } = Dimensions.get("window");
+  const { width, height } = Dimensions.get('window');
 
   const animatedStyles = useAnimatedStyle(() => {
     return {
       transform: [
         { translateY: offset.value < 0 ? offset.value : height },
-        ...(isWeb ? [] : [{ translateX: width - 60 }]),
-      ],
+        ...(isWeb ? [] : [{ translateX: width - 60 }])
+      ]
     };
   });
 
@@ -44,12 +44,12 @@ const ScrollViewWithButton = ({
   };
 
   const handScroll = ({
-    nativeEvent,
+    nativeEvent
   }: NativeSyntheticEvent<NativeScrollEvent>) => {
     if (nativeEvent.contentOffset.y > 250) {
       offset.value = withSpring(-100, {
         damping: 20,
-        stiffness: 90,
+        stiffness: 90
       });
     } else {
       offset.value = withSpring(height);
@@ -89,11 +89,11 @@ export default ScrollViewWithButton;
 const { styles, ids } = StyleSheet.create({
   container: {
     ...(isWeb && {
-      alignItems: "flex-end",
-      flex: 0,
-    }),
+      alignItems: 'flex-end',
+      flex: 0
+    })
   },
   icon: {
-    backgroundColor: isWeb ? "rgba(95,141,218,0.45)" : "rgba(95,141,218, 0.25)",
-  },
+    backgroundColor: isWeb ? 'rgba(95,141,218,0.45)' : 'rgba(95,141,218, 0.25)'
+  }
 });

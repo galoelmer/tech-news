@@ -15,6 +15,7 @@ import SafeAreaView from '@/components/safe-area-view';
 import ScrollViewWithButton from '@/components/scrollview-with-button';
 import Toast from '@/components/toast';
 import { setFocusArticle } from '@/context/reducers/news-reducer';
+import ModalTopBar from '@/navigation/navigation-components/modal-top-bar';
 
 interface PostCreatorsProps {
   creators: string[] | null | undefined;
@@ -35,7 +36,7 @@ const PostCreators = ({ creators }: PostCreatorsProps) => {
   );
 };
 
-const NewsDetails = ({ route }: NewsDetailsProps) => {
+const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
   const dispatch = useAppDispatch();
   const { id } = route.params;
   const previousScreen = useAppSelector((state) => state.ui.previousScreen);
@@ -84,6 +85,7 @@ const NewsDetails = ({ route }: NewsDetailsProps) => {
   return (
     <>
       <SafeAreaView>
+        <ModalTopBar navigation={navigation} />
         <ScrollViewWithButton scrollviewStyles={{ marginHorizontal: 15 }}>
           <View style={{ marginTop: 10 }}>
             <Text
