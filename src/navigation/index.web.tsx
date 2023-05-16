@@ -10,7 +10,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import * as Linking from 'expo-linking';
 import { useMediaQuery } from 'react-responsive';
 
-import HeaderRightButton from './header-right-buttons';
+import HeaderRightButton from './navigation-components/header-right-buttons';
 import { RootStackParamList } from './types';
 
 import GradientBackground from '@/components/gradient-background';
