@@ -1,9 +1,9 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { api } from 'services/api';
 
-import { UiState } from '../types';
+import { DialogState, UiState } from '../types';
 
-const initialState: UiState = {
+const initialState = {
   dialog: {
     isOpen: false,
     title: '',
@@ -17,13 +17,13 @@ const initialState: UiState = {
   },
   tabBarHeight: null,
   previousScreen: null
-};
+} as UiState;
 
 const uiSlice = createSlice({
   name: 'ui',
   initialState,
   reducers: {
-    openDialog: (state, { payload }) => {
+    openDialog: (state, { payload }: PayloadAction<DialogState>) => {
       state.dialog = {
         isOpen: true,
         title: payload.title,

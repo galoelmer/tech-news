@@ -10,6 +10,7 @@ export type RootStackParamList = {
   NewsFeed: undefined;
   Home: undefined;
   Account: NavigatorScreenParams<AccountTabsParamList>;
+  LoginStack: NavigatorScreenParams<AccountTabsParamList>;
   Settings: undefined;
   AccountInfo: undefined;
   Appearance: undefined;

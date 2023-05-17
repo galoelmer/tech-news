@@ -1,4 +1,4 @@
-import type { RootStackParamList } from '@/navigation/types';
+import type { RootStackParamList } from 'navigation/types';
 
 export interface Article {
   id: string;
@@ -31,12 +31,10 @@ export interface DialogState {
   isOpen: boolean;
   title: string;
   content?: string;
-  action?:
-    | {
-        label?: string;
-        screen?: keyof RootStackParamList;
-      }
-    | undefined;
+  action?: {
+    label: string;
+    screen: keyof RootStackParamList;
+  };
 }
 
 export interface SnackbarState {
