@@ -5,9 +5,11 @@ import ScrollViewWithButton from '@/components/scrollview-with-button';
 import { useGetUserBookmarksQuery } from '@/services/api';
 
 const Bookmarks = () => {
-  const { data, isLoading } = useGetUserBookmarksQuery();
+  const { data, isLoading, isFetching } = useGetUserBookmarksQuery(undefined, {
+    refetchOnMountOrArgChange: true
+  });
 
-  if (isLoading) {
+  if (isLoading || isFetching) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
         <ActivityIndicator size="large" />

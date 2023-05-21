@@ -14,15 +14,6 @@ export interface Article {
   isBookmarked?: boolean;
 }
 
-export interface NewsState {
-  focusArticle: {
-    id: string | null;
-    url: string | null;
-    isBookmarked: boolean;
-    previousScreen?: string;
-  } | null;
-}
-
 export interface AuthState {
   isAuth: boolean;
 }

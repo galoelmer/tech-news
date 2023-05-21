@@ -1,7 +1,7 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Image, View } from 'react-native';
 
-import { useAppDispatch, useAppSelector } from 'hooks/useRedux';
+import { useAppSelector } from 'hooks/useRedux';
 import { NewsDetailsProps } from 'navigation/types';
 import { Badge, Text } from 'react-native-paper';
 import { useGetNewsDataQuery, useGetUserBookmarksQuery } from 'services/api';
@@ -14,7 +14,7 @@ import withDialog from '@/components/dialog';
 import SafeAreaView from '@/components/safe-area-view';
 import ScrollViewWithButton from '@/components/scrollview-with-button';
 import Toast from '@/components/toast';
-import { setFocusArticle } from '@/context/reducers/news-reducer';
+import { Article } from '@/context/types';
 import ModalTopBar from '@/navigation/navigation-components/modal-top-bar';
 
 interface PostCreatorsProps {
@@ -37,42 +37,30 @@ const PostCreators = ({ creators }: PostCreatorsProps) => {
 };
 
 const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
-  const dispatch = useAppDispatch();
+  const [currentArticle, setCurrentArticle] = useState<Article | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
   const { id } = route.params;
   const previousScreen = useAppSelector((state) => state.ui.previousScreen);
 
-  const { article, isLoadingArticle } = useGetNewsDataQuery(undefined, {
-    skip: previousScreen === 'bookmarks',
-    selectFromResult: ({ data, isLoading }) => ({
-      article: data?.find((item) => item.id === id),
-      isLoadingArticle: isLoading
+  const { article } = useGetNewsDataQuery(undefined, {
+    skip: previousScreen === 'bookmark',
+    selectFromResult: ({ data }) => ({
+      article: data?.find((item) => item.id === id)
     })
   });
 
-  const { bookmark, isLoadingBookmark } = useGetUserBookmarksQuery(undefined, {
+  const { bookmark } = useGetUserBookmarksQuery(undefined, {
     skip: previousScreen === 'home',
-    selectFromResult: ({ data, isLoading }) => ({
-      bookmark: data?.find((item) => item.id === id),
-      isLoadingBookmark: isLoading
+    selectFromResult: ({ data }) => ({
+      bookmark: data?.find((item) => item.id === id)
     })
   });
-
-  const currentArticle = article ?? bookmark;
-  const isLoading = isLoadingArticle || isLoadingBookmark;
 
   useEffect(() => {
-    dispatch(
-      setFocusArticle({
-        id: currentArticle?.id,
-        url: currentArticle?.link,
-        isBookmarked: currentArticle?.isBookmarked
-      })
-    );
-
-    return () => {
-      dispatch(setFocusArticle(null));
-    };
-  }, [currentArticle?.isBookmarked]);
+    setCurrentArticle(article ?? bookmark ?? null);
+    setIsLoading(false);
+  }, []);
 
   if (isLoading) {
     return (
@@ -82,10 +70,15 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
     );
   }
 
+  if (!currentArticle) {
+    navigation.goBack();
+    return null;
+  }
+
   return (
     <>
       <SafeAreaView>
-        <ModalTopBar navigation={navigation} />
+        <ModalTopBar navigation={navigation} article={currentArticle} />
         <ScrollViewWithButton scrollviewStyles={{ marginHorizontal: 15 }}>
           <View style={{ marginTop: 10 }}>
             <Text
