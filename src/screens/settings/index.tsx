@@ -1,9 +1,9 @@
 import { Pressable, PressableProps, StyleSheet, View } from 'react-native';
 
-import * as SecureStore from 'expo-secure-store';
 import useAuth from 'hooks/useAuth';
 import { Button, Divider, List, ListIconProps, Text } from 'react-native-paper';
 
+import { deleteLocalStoreItem } from '@/hooks/useLocalStore';
 import type { SettingsProps } from '@/navigation/types';
 import { useLogoutUserMutation } from '@/services/api';
 type ListItemProps = {
@@ -67,7 +67,7 @@ const Settings = ({ navigation }: SettingsProps) => {
           labelStyle={styles.logoutButtonLabel}
           mode="outlined"
           onPress={async () => {
-            await SecureStore.deleteItemAsync('token');
+            await deleteLocalStoreItem('token');
             await logoutUser();
             navigation.navigate('Home');
           }}

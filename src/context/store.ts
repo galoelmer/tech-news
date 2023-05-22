@@ -4,9 +4,11 @@ import { api } from 'services/api';
 
 import rootReducers from './reducers';
 
+import { isNative } from '@/utils/checkPlatform';
+
 const middlewares = [api.middleware];
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== 'production' && isNative) {
   // eslint-disable-next-line
   const createDebugger = require('redux-flipper').default;
   middlewares.push(createDebugger());

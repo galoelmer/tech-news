@@ -1,16 +1,21 @@
 import type { FetchBaseQueryError } from '@reduxjs/toolkit/query';
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import type { Article } from 'context/types';
-import * as SecureStore from 'expo-secure-store';
 
 import type { AddBookmarkRequest, AuthResponse, LoginRequest } from './types';
+
+import {
+  deleteLocalStoreItem,
+  getLocalStoreItem,
+  setLocalStoreItem
+} from '@/hooks/useLocalStore';
 
 export const api = createApi({
   reducerPath: 'api',
   baseQuery: fetchBaseQuery({
     baseUrl: '/api',
     prepareHeaders: async (headers, { endpoint }) => {
-      const token = await SecureStore.getItemAsync('token');
+      const token = await getLocalStoreItem('token');
       // const { signupUser } = api.endpoints;
       // const shouldIncludeToken = ![signupUser.name].includes(endpoint);
       // if (shouldIncludeToken && token) {
@@ -27,7 +32,7 @@ export const api = createApi({
     }),
     getUserData: builder.query<object, void>({
       queryFn: async (_arg, queryApi, _extraOptions, baseQuery) => {
-        const token = await SecureStore.getItemAsync('token');
+        const token = await getLocalStoreItem('token');
         if (!token) {
           queryApi.abort();
         }
@@ -118,7 +123,7 @@ export const api = createApi({
       onQueryStarted: async (_body, { queryFulfilled, dispatch }) => {
         try {
           const { data } = await queryFulfilled;
-          await SecureStore.setItemAsync('token', data.token);
+          await setLocalStoreItem('token', data.token);
           dispatch(
             api.endpoints.getNewsData.initiate(undefined, {
               forceRefetch: true
@@ -132,7 +137,7 @@ export const api = createApi({
     }),
     logoutUser: builder.mutation<null, void>({
       queryFn: async (_arg, { dispatch }) => {
-        await SecureStore.deleteItemAsync('token');
+        await deleteLocalStoreItem('token');
         dispatch(
           api.util.updateQueryData('getNewsData', undefined, (draft) => {
             return draft.map(({ isBookmarked, ...rest }) => ({ ...rest }));

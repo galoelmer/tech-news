@@ -1,11 +1,13 @@
-import clc from 'cli-color';
 import jwtDecode from 'jwt-decode';
 import { createServer, Response } from 'miragejs';
 
 import data from './mock-data';
 
 export function makeServer({ environment = 'development' } = {}) {
-  console.log(clc.bgMagentaBright('🚀 ~ Development Server running...'));
+  console.log(
+    '\x1b[42m\x1b[30m%s\x1b[0m',
+    '🚀 ~ Development Server running...'
+  );
 
   const server = createServer({
     environment,
@@ -257,22 +259,23 @@ const logger = (request: Logger) => {
     request;
 
   if (method && url && status) {
-    console.log(clc.blueBright(`[${method}] ${status} ${url}`));
+    console.log('\x1b[34m%s\x1b[0m', `[${method}] ${status} ${url}`);
   }
 
   if (Object.keys(queryParams).length > 0) {
-    console.log(clc.yellowBright(`params: ${JSON.stringify(queryParams)}`));
+    console.log('\x1b[33m%s\x1b[0m', `params: ${JSON.stringify(queryParams)}`);
   }
 
   if (Object.keys(requestHeaders).length > 0) {
     console.log(
-      clc.magentaBright(`headers: ${JSON.stringify(requestHeaders)}`)
+      '\x1b[35m%s\x1b[0m',
+      `headers: ${JSON.stringify(requestHeaders)}`
     );
   }
 
   if (requestBody) {
     const body = JSON.stringify(JSON.parse(requestBody));
-    console.log(clc.greenBright(`body: ${body}`));
+    console.log('\x1b[32m%s\x1b[0m', `body: ${body}`);
   }
 };
 
