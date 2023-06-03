@@ -4,6 +4,7 @@ import { ActivityIndicator, Image, View } from 'react-native';
 import { useAppSelector } from 'hooks/useRedux';
 import { NewsDetailsProps } from 'navigation/types';
 import { Badge, Text } from 'react-native-paper';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useGetNewsDataQuery, useGetUserBookmarksQuery } from 'services/api';
 import formatDate from 'utils/formatDate';
 
@@ -39,6 +40,8 @@ const PostCreators = ({ creators }: PostCreatorsProps) => {
 const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
   const [currentArticle, setCurrentArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+  const { bottom } = useSafeAreaInsets();
 
   const { id } = route.params;
   const previousScreen = useAppSelector((state) => state.ui.previousScreen);
@@ -105,8 +108,10 @@ const NewsDetails = ({ route, navigation }: NewsDetailsProps) => {
             <NewBodyText text={currentArticle?.content ?? ''} />
           </View>
         </ScrollViewWithButton>
+        <View style={[styles.toastContainer, { bottom }]}>
+          <Toast />
+        </View>
       </SafeAreaView>
-      <Toast toastId="bookmark-toast" />
     </>
   );
 };

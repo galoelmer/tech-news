@@ -31,7 +31,6 @@ export interface DialogState {
 export interface SnackbarState {
   isOpen: boolean;
   message: string;
-  keyId?: string;
 }
 
 export interface UiState {

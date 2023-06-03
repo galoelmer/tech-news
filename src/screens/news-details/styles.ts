@@ -63,6 +63,11 @@ const { styles, ids } = StyleSheet.create({
       width: '70%',
       alignSelf: 'center'
     }
+  },
+  toastContainer: {
+    position: 'absolute',
+    left: 0,
+    right: 0
   }
 });
 

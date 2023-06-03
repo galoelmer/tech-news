@@ -8,17 +8,10 @@ import Animated, { SlideInDown } from 'react-native-reanimated';
 import { closeSnackbar } from '@/context/reducers/ui-reducer';
 import { useAppDispatch, useAppSelector } from '@/hooks/useRedux';
 
-type ToastProps = {
-  toastId?: string;
-};
-
-// TODO: create toast with identification keys
-const Toast = ({ toastId }: ToastProps) => {
+const Toast = () => {
   const dispatch = useAppDispatch();
   const tabBarHeight = useAppSelector((state) => state.ui.tabBarHeight);
-  const { isOpen, message, keyId } = useAppSelector(
-    (state) => state.ui.snackbar
-  );
+  const { isOpen, message } = useAppSelector((state) => state.ui.snackbar);
 
   const onDismissSnackBar = () => {
     dispatch(closeSnackbar());
@@ -31,10 +24,6 @@ const Toast = ({ toastId }: ToastProps) => {
   }, []);
 
   if (!isOpen) return null;
-
-  if (keyId) {
-    if (keyId !== toastId) return null;
-  }
 
   return (
     <Animated.View
